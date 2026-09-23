@@ -1,0 +1,85 @@
+<section
+  class="r4v3-focus"
+  [class.r4v3-focus--page]="variant === 'page'"
+  id="r4v3"
+  aria-labelledby="r4v3-title"
+  appScrollScrub
+>
+  <div class="r4v3-focus__track">
+    <div class="r4v3-focus__stage">
+      <div class="r4v3-focus__atmosphere" aria-hidden="true">
+        <div class="r4v3-focus__haze"></div>
+        <div class="r4v3-focus__vignette"></div>
+        <div class="r4v3-focus__grain"></div>
+        <div class="r4v3-focus__grid"></div>
+      </div>
+
+      <div class="r4v3-focus__token" aria-hidden="true">
+        <div class="r4v3-focus__ring r4v3-focus__ring--outer"></div>
+        <div class="r4v3-focus__ring r4v3-focus__ring--mid"></div>
+        <div class="r4v3-focus__coin">
+          <span class="r4v3-focus__coin-glow"></span>
+          <span class="r4v3-focus__coin-face">
+            <span class="r4v3-focus__coin-mark">R4V3</span>
+            <span class="r4v3-focus__coin-sub">TESTNET</span>
+          </span>
+        </div>
+        <div class="r4v3-focus__beam"></div>
+      </div>
+
+      <div class="r4v3-focus__content">
+        <div class="r4v3-focus__copy">
+          <p class="r4v3-focus__eyebrow">Token R4V3</p>
+          <h2 id="r4v3-title" class="r4v3-focus__title">
+            <span class="r4v3-focus__line">Unité de lecture</span>
+            <span class="r4v3-focus__line">de l’écosystème démo.</span>
+          </h2>
+          <p class="r4v3-focus__lead">
+            R4V3 est le token natif de DartChain Native : prix, swaps LaunchLab, faucet testnet et
+            interactions réseau.
+          </p>
+          <ul class="r4v3-focus__checks">
+            <li>Utility pédagogique — pas un memecoin LaunchLab</li>
+            <li>Micro-unité affichée : m4t3r / M4T3R</li>
+            <li>Parité CHF : ancrage d’affichage, pas une garantie</li>
+            <li>Hors scope : mainnet, listing, achat public</li>
+          </ul>
+          <div class="r4v3-focus__actions">
+            @if (variant === 'landing') {
+              <a routerLink="/r4v3" class="cta cta--lg cta--secondary review-cta">Fiche R4V3</a>
+              <a routerLink="/legal/risques" class="cta cta--lg cta--tertiary review-cta"
+                >Lire les risques</a
+              >
+            } @else {
+              <a routerLink="/legal/risques" class="cta cta--md cta--primary review-cta">Risques</a>
+              <a routerLink="/faq" class="cta cta--md cta--secondary review-cta">FAQ</a>
+            }
+          </div>
+        </div>
+
+        <aside class="r4v3-focus__panel" aria-label="Référence R4V3">
+          <p class="r4v3-focus__panel-label">Référence d’affichage</p>
+          <p class="r4v3-focus__panel-pair">1 R4V3 ≈ 1 CHF</p>
+          <p class="r4v3-focus__panel-note">
+            Ancrage pédagogique dans l’UI testnet. Ce n’est pas un stablecoin régulé ni une
+            promesse de valeur.
+          </p>
+          <dl class="r4v3-focus__meta">
+            <div>
+              <dt>Réseau</dt>
+              <dd>DartChain Native</dd>
+            </div>
+            <div>
+              <dt>Chain-id</dt>
+              <dd>3377</dd>
+            </div>
+            <div>
+              <dt>Statut</dt>
+              <dd>Démo / testnet</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>

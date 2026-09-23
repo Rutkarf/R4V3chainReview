@@ -1,0 +1,64 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1000;
+  padding: 0.75rem 1rem;
+  background: var(--accent-cyan);
+  color: var(--brand-porcelain, #fdfffc);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+.app-main {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  isolation: isolate;
+}
+
+.mobile-sticky {
+  display: none;
+}
+
+.review-cta.cta--md {
+  min-height: 42px;
+  padding: 0 1.05rem;
+  font-size: 0.68rem;
+}
+
+@media (max-width: 720px) {
+  .mobile-sticky {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+    padding: 0.8rem 1rem calc(0.8rem + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--border-subtle);
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(16px);
+  }
+
+  .mobile-sticky .cta {
+    width: 100%;
+  }
+
+  .app-main {
+    padding-bottom: 5rem;
+  }
+}

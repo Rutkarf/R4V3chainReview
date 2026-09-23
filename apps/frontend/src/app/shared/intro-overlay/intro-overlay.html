@@ -1,0 +1,59 @@
+<div
+  class="intro"
+  [hidden]="!visible()"
+  [class.intro--fonts]="fontsIn()"
+  [class.intro--ready]="ready()"
+  [class.intro--inserting]="inserting()"
+  [class.intro--recede]="receding()"
+  [class.intro--to-header]="toHeader()"
+  [class.intro--power]="powerOn()"
+  [class.intro--exiting]="exiting()"
+  [attr.role]="visible() ? 'dialog' : null"
+  [attr.aria-modal]="visible() ? 'true' : null"
+  [attr.aria-label]="visible() ? 'Introduction dartchain.review' : null"
+>
+  <canvas #gl class="intro__gl" aria-hidden="true"></canvas>
+  <div class="intro__grain" aria-hidden="true"></div>
+  <div class="intro__curtain" aria-hidden="true"></div>
+
+  <div class="intro__hud">
+    <p class="intro__brand">DARTCHAIN</p>
+    <p class="intro__title">TESTNET REVIEW</p>
+    <div class="intro__bar" aria-hidden="true">
+      <i [style.width.%]="progress()"></i>
+    </div>
+
+    <div class="intro__insert">
+      <div class="intro__drop" aria-hidden="true">
+        <div class="intro__well">
+          <div #coin class="intro__coin"></div>
+        </div>
+        <div class="intro__slot">
+          <span class="intro__slot-lip"></span>
+          <span class="intro__slot-mouth"></span>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="intro__hint"
+        [attr.data-text]="ready() ? 'INSERT R4V3' : 'LOADING…'"
+        [disabled]="!ready() || inserting()"
+        (click)="startInsert()"
+      >
+        <span class="intro__hint-ring" aria-hidden="true"></span>
+        <span class="intro__hint-scan" aria-hidden="true"></span>
+        <span class="intro__hint-ghost intro__hint-ghost--cyan" aria-hidden="true">{{
+          ready() ? 'INSERT R4V3' : 'LOADING…'
+        }}</span>
+        <span class="intro__hint-ghost intro__hint-ghost--mag" aria-hidden="true">{{
+          ready() ? 'INSERT R4V3' : 'LOADING…'
+        }}</span>
+        <span class="intro__hint-text">{{ ready() ? 'INSERT R4V3' : 'LOADING…' }}</span>
+      </button>
+    </div>
+
+    <button type="button" class="intro__skip" (click)="skip()">Passer l’intro</button>
+  </div>
+
+  <div #traveler class="intro__traveler" aria-hidden="true"></div>
+</div>

@@ -1,0 +1,105 @@
+.site-footer {
+  position: relative;
+  z-index: 10;
+  margin-top: 2rem;
+  border-top: 1px solid var(--border-subtle);
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 0%, rgba(var(--accent-cyan-rgb), 0.06), transparent 55%),
+    linear-gradient(180deg, rgba(var(--surface-rgb), 0.4) 0%, #000 100%);
+}
+
+.site-footer__inner {
+  display: grid;
+  grid-template-columns: 1.55fr repeat(3, 1fr);
+  gap: 2.5rem;
+  max-width: var(--mkt-max, 1120px);
+  margin: 0 auto;
+  padding: 3.75rem 1.5rem 2.5rem;
+}
+
+.site-footer__brand-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.site-footer__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  color: var(--brand-porcelain, #fdfffc);
+}
+
+.site-footer__tld {
+  color: var(--accent-cyan);
+}
+
+.site-footer__tagline,
+.site-footer__disclaimer {
+  margin: 0.85rem 0 0;
+  color: var(--text-secondary-ds);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.site-footer__disclaimer {
+  color: var(--warning);
+  font-size: 0.82rem;
+}
+
+.site-footer__heading {
+  margin: 0 0 0.95rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted-ds);
+  font-family: var(--font-mono, monospace);
+}
+
+.site-footer__col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.site-footer__col a {
+  color: var(--text-secondary-ds);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 160ms ease;
+}
+
+.site-footer__col a:hover {
+  color: var(--accent-cyan);
+}
+
+.site-footer__bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.55rem;
+  max-width: var(--mkt-max, 1120px);
+  margin: 0 auto;
+  padding: 1.15rem 1.5rem 1.75rem;
+  border-top: 1px solid var(--border-faint);
+  color: var(--text-muted-ds);
+  font-size: 0.75rem;
+  font-family: var(--font-mono, monospace);
+}
+
+.site-footer__bottom p {
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .site-footer__inner {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .site-footer__inner {
+    grid-template-columns: 1fr;
+  }
+}

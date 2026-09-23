@@ -1,0 +1,531 @@
+/**
+ * Pass 1 — Design system tokens (dark navy fintech / Web3 premium).
+ *
+ * Viewport canonique : 250 × 550 px.
+ * Préfixe --ds-* + alias sémantiques (--bg-primary, --surface, …).
+ * Aucune variable legacy n’est retirée : les noms néon / carbone
+ * restent disponibles et pointent vers des valeurs plus sobres.
+ *
+ * Zones (ordre de lecture @ 250×550) :
+ *   navbar → exchange → chart → showcase-header → showcase-panel
+ *   → bottom-panel → bottom-dock → floor-peek
+ */
+
+:root {
+  /* ═══════════════════════════════════════════════════════════
+   * Sémantique fintech (API publique Pass 1)
+   * ═══════════════════════════════════════════════════════════ */
+  --bg-primary: #000000;
+  --bg-primary-rgb: 0, 0, 0;
+  --bg-secondary: #000000;
+  --bg-secondary-rgb: 0, 0, 0;
+
+  --surface: #0a1220;
+  --surface-rgb: 10, 18, 32;
+  --surface-elevated: #0d1828;
+  --surface-elevated-rgb: 13, 24, 40;
+  --surface-hover: #111f32;
+  --surface-hover-rgb: 17, 31, 50;
+
+  --text-primary-ds: #e8eef5;
+  --text-secondary-ds: #8b9bb0;
+  --text-muted-ds: #5c6b7e;
+
+  --accent-cyan: #2ec4d6;
+  --accent-cyan-rgb: 46, 196, 214;
+  --accent-purple: #7b6cff;
+  --accent-purple-rgb: 123, 108, 255;
+
+  --success: #2ecc8a;
+  --success-rgb: 46, 204, 138;
+  --warning: #e6b84d;
+  --warning-rgb: 230, 184, 77;
+  --danger: #e85d75;
+  --danger-rgb: 232, 93, 117;
+
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default-ds: rgba(255, 255, 255, 0.1);
+  --border-active: rgba(var(--accent-cyan-rgb), 0.45);
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 18px;
+  --radius-pill: 999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  --shadow-soft: 0 3px 17px rgba(0, 0, 0, 0.28);
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.22);
+  --shadow-focus:
+    0 0 0 2px rgba(var(--bg-primary-rgb), 0.92),
+    0 0 0 3px rgba(var(--accent-cyan-rgb), 0.45);
+
+  --font-ui: 'Inter', 'Roboto', system-ui, sans-serif;
+  --font-display: 'Orbit', 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Roboto Mono', monospace;
+
+  --type-h1: 1.125rem;      /* 18px — rare @ 250 */
+  --type-h2: 0.8125rem;    /* 13px */
+  --type-h3: 0.6875rem;    /* 11px */
+  --type-body: 0.6875rem;  /* 11px */
+  --type-caption: 0.5625rem; /* 9px */
+  --type-label: 0.5rem;    /* 8px */
+  --type-metric: 0.9375rem; /* 15px — KPI values */
+
+  /* Glass subtil (cards premium, pas vitres néon) */
+  --glass-fill-fintech: rgba(var(--surface-rgb), 0.75);
+  --glass-blur-fintech: blur(16px) saturate(120%);
+  --glass-border-fintech: var(--border-subtle);
+  --glass-shadow-fintech: var(--shadow-card);
+
+  /* ═══════════════════════════════════════════════════════════
+   * --ds-* (consommé par ds-surface, tabs, scrollbars, composants)
+   * ═══════════════════════════════════════════════════════════ */
+
+  /* Fond & atmosphère */
+  --ds-bg-deep: var(--bg-primary);
+  --ds-bg-deep-rgb: var(--bg-primary-rgb);
+  --ds-bg-elevated: var(--surface-elevated);
+  --ds-bg-elevated-rgb: var(--surface-elevated-rgb);
+  --ds-bg-glass: rgba(var(--surface-rgb), 0.72);
+  --ds-bg-glass-strong: rgba(var(--surface-rgb), 0.88);
+
+  /* Surfaces sobres (legacy carbon keys conservées, opacités très basses) */
+  --ds-surface-base-rgb: var(--surface-rgb);
+  --ds-surface-base-deep-rgb: var(--bg-primary-rgb);
+  --ds-surface-metal-rgb: 72, 92, 118;
+  --ds-surface-metal-highlight-rgb: 148, 168, 196;
+
+  --ds-surface-tint: rgba(var(--surface-rgb), 0.55);
+
+  /* Blur lisible, non « vitre gaming » */
+  --ds-surface-backdrop: var(--glass-blur-fintech);
+
+  --ds-surface-bg: linear-gradient(
+    168deg,
+    rgba(var(--surface-elevated-rgb), 0.55) 0%,
+    rgba(var(--surface-rgb), 0.42) 48%,
+    rgba(var(--bg-primary-rgb), 0.38) 100%
+  );
+  --ds-surface-metallic: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(var(--surface-rgb), 0.02) 50%,
+    rgba(var(--accent-cyan-rgb), 0.02) 100%
+  );
+  --ds-surface-veil: linear-gradient(
+    180deg,
+    rgba(var(--surface-rgb), 0.08) 0%,
+    rgba(var(--bg-primary-rgb), 0.04) 50%,
+    rgba(var(--surface-rgb), 0.06) 100%
+  );
+
+  /* Carbon weave — désactivé (motifs diagonaux 0.5–2px = moiré / fatigue visuelle) */
+  --ds-surface-carbon-weave: none;
+  --ds-surface-carbon-size: auto;
+  --ds-surface-carbon-opacity: 0;
+
+  --ds-surface-metallic-sheen: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    transparent 22%,
+    transparent 78%,
+    rgba(var(--accent-cyan-rgb), 0.02) 100%
+  );
+  --ds-surface-metallic-edge: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.02) 48%,
+    rgba(255, 255, 255, 0.03) 50%,
+    rgba(255, 255, 255, 0.015) 52%,
+    transparent 100%
+  );
+  --ds-surface-micro-grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E");
+
+  --ds-surface-bg-header: var(--ds-surface-bg);
+  --ds-surface-bg-dock: var(--ds-surface-bg);
+  --ds-surface-bg-solid: rgba(var(--surface-rgb), 0.94);
+  --ds-surface-opacity-solid: 0.94;
+
+  --ds-surface-carbon-opacity: 0;
+  --ds-surface-sheen-opacity: 0.08;
+  /* Legacy aliases */
+  --ds-surface-noise-opacity: var(--ds-surface-carbon-opacity);
+  --ds-surface-grid-opacity: var(--ds-surface-sheen-opacity);
+  --ds-surface-noise: var(--ds-surface-carbon-weave);
+  --ds-surface-grid: var(--ds-surface-metallic-sheen);
+  --ds-surface-grid-size: var(--ds-surface-carbon-size);
+
+  --ds-surface-blur: var(--ds-surface-backdrop);
+  --ds-surface-radius: var(--radius-lg);
+  --ds-surface-border: var(--border-subtle);
+  --ds-surface-border-top: rgba(255, 255, 255, 0.07);
+  --ds-surface-border-bottom: rgba(var(--accent-cyan-rgb), 0.08);
+  --ds-surface-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    var(--shadow-card);
+  --ds-surface-shadow-strip:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.18);
+
+  /* Card levels (Pass 1) */
+  --ds-card-standard-bg: var(--glass-fill-fintech);
+  --ds-card-elevated-bg: rgba(var(--surface-elevated-rgb), 0.82);
+  --ds-card-active-bg: rgba(var(--surface-hover-rgb), 0.88);
+  --ds-card-standard-border: var(--border-subtle);
+  --ds-card-elevated-border: var(--border-default-ds);
+  --ds-card-active-border: rgba(var(--accent-cyan-rgb), 0.28);
+  --ds-card-padding: var(--space-3);
+  --ds-card-radius: var(--radius-lg);
+
+  /* Alias legacy → surface */
+  --ds-glass-blur: var(--ds-surface-blur);
+  --ds-glass-shadow: var(--ds-surface-shadow);
+
+  /* Accents — noms « neon » conservés, valeurs teal sobres (pas gaming) */
+  --ds-neon-cyan: var(--accent-cyan);
+  --ds-neon-cyan-rgb: var(--accent-cyan-rgb);
+  --ds-neon-magenta: #c45b9f;
+  --ds-neon-magenta-rgb: 196, 91, 159;
+  --ds-neon-violet: var(--accent-purple);
+  --ds-neon-violet-rgb: var(--accent-purple-rgb);
+
+  /* Texte */
+  --ds-text-primary: var(--text-primary-ds);
+  --ds-text-secondary: var(--text-secondary-ds);
+  --ds-text-muted: var(--text-muted-ds);
+  --ds-text-data: var(--accent-cyan);
+  --ds-text-label: var(--text-muted-ds);
+  --ds-text-value: var(--text-primary-ds);
+
+  /* Bordures & séparateurs */
+  --ds-border-subtle: var(--border-subtle);
+  --ds-border-default: var(--border-default-ds);
+  --ds-border-accent: rgba(var(--accent-cyan-rgb), 0.22);
+  --ds-border-accent-active: var(--border-active);
+
+  /* Rayons */
+  --ds-radius-sm: var(--radius-sm);
+  --ds-radius-md: var(--radius-md);
+  --ds-radius-lg: var(--radius-lg);
+  --ds-radius-xl: var(--radius-xl);
+  --ds-radius-pill: var(--radius-pill);
+  --ds-radius-input: var(--radius-md);
+  --ds-radius-btn: 12px;
+
+  /* Espacement (grille 3px, viewport 250×550) */
+  --ds-space-1: var(--space-1);
+  --ds-space-2: var(--space-2);
+  --ds-space-3: var(--space-3);
+  --ds-space-4: var(--space-4);
+  --ds-space-6: var(--space-6);
+  --ds-space-8: var(--space-8);
+  --ds-shell-inline: var(--space-2);
+  --ds-section-gap: var(--space-2);
+  --ds-panel-gap: var(--space-2);
+
+  /* Typographie */
+  --ds-font-ui: var(--font-ui);
+  --ds-font-display: var(--font-display);
+  --ds-font-mono: var(--font-mono);
+  --ds-text-xs: var(--type-caption);
+  --ds-text-sm: var(--type-body);
+  --ds-text-md: var(--type-h2);
+  --ds-text-lg: 0.875rem;   /* 14px */
+  --ds-text-xl: var(--type-metric);
+  --ds-text-label: var(--type-label);
+  --ds-text-caption: var(--type-caption);
+
+  /* Glow minimal — guide l’attention uniquement */
+  --ds-glow-active: 0 0 0 1px rgba(var(--accent-cyan-rgb), 0.2);
+
+  /* Sémantique états */
+  --ds-success: var(--success);
+  --ds-success-rgb: var(--success-rgb);
+  --ds-warning: var(--warning);
+  --ds-warning-rgb: var(--warning-rgb);
+  --ds-danger: var(--danger);
+  --ds-danger-rgb: var(--danger-rgb);
+  --ds-info: var(--accent-cyan);
+  --ds-info-rgb: var(--accent-cyan-rgb);
+
+  /* Scrollbars sobres */
+  --ds-scrollbar-size: 3px;
+  --ds-scrollbar-track: rgba(var(--bg-primary-rgb), 0.72);
+  --ds-scrollbar-thumb: rgba(var(--accent-cyan-rgb), 0.22);
+  --ds-scrollbar-thumb-hover: rgba(var(--accent-cyan-rgb), 0.38);
+  --ds-scrollbar-thumb-active: rgba(var(--accent-cyan-rgb), 0.48);
+  --ds-scrollbar-border: rgba(var(--accent-cyan-rgb), 0.1);
+  --ds-scrollbar-glow: transparent;
+  --ds-scrollbar-thumb-gradient: linear-gradient(
+    180deg,
+    rgba(var(--accent-cyan-rgb), 0.32) 0%,
+    rgba(var(--accent-cyan-rgb), 0.18) 100%
+  );
+  --ds-scrollbar-thumb-gradient-hover: linear-gradient(
+    180deg,
+    rgba(var(--accent-cyan-rgb), 0.44) 0%,
+    rgba(var(--accent-cyan-rgb), 0.28) 100%
+  );
+
+  /* Tabs : niveau A (vue) vs B (filtre) — underline discret, pas halo */
+  --ds-tab-a-height: 23px;
+  --ds-tab-a-bg-active: rgba(var(--accent-cyan-rgb), 0.08);
+  --ds-tab-a-border-active: var(--accent-cyan);
+  --ds-tab-a-underline: 2px solid var(--accent-cyan);
+  --ds-tab-b-height: 19px;
+  --ds-tab-b-bg: transparent;
+  --ds-tab-b-border: var(--ds-border-default);
+
+  /* Inputs */
+  --ds-input-bg: rgba(var(--surface-elevated-rgb), 0.65);
+  --ds-input-bg-hover: rgba(var(--surface-hover-rgb), 0.72);
+  --ds-input-border: var(--ds-border-default);
+  --ds-input-border-focus: rgba(var(--accent-cyan-rgb), 0.55);
+  --ds-input-radius: var(--ds-radius-input);
+  --ds-input-padding-y: 5px;
+  --ds-input-padding-x: 9px;
+  --ds-input-font: var(--ds-text-sm);
+  --ds-input-placeholder: var(--ds-text-muted);
+
+  /* Badges / status */
+  --ds-badge-radius: var(--radius-pill);
+  --ds-badge-font: var(--type-label);
+  --ds-badge-padding: 0px 4px;
+  --ds-status-live: var(--success);
+  --ds-status-live-rgb: var(--success-rgb);
+  --ds-status-secondary-fg: var(--ds-text-secondary);
+  --ds-status-secondary-bg: rgba(255, 255, 255, 0.04);
+
+  /* Recommendation / info contextuelle */
+  --ds-recommend-bg: rgba(var(--accent-cyan-rgb), 0.06);
+  --ds-recommend-border: rgba(var(--accent-cyan-rgb), 0.16);
+  --ds-recommend-fg: var(--ds-text-secondary);
+
+  /* Skeleton loading */
+  --ds-skeleton-base: rgba(255, 255, 255, 0.04);
+  --ds-skeleton-shine: rgba(255, 255, 255, 0.08);
+
+  /* —— Layout budgets @ 250×550 zero-scroll (tout déplié ≤ 550) —— */
+  --ds-viewport-w: 250px;
+  --ds-viewport-h: 550px;
+  --ds-zone-navbar: 32px;
+  --ds-zone-exchange: 32px;
+  --ds-zone-chart: 120px;
+  --ds-zone-showcase-header: 14px;
+  --ds-zone-showcase-body: 108px;
+  --ds-zone-bottom-panel: 118px;
+  --ds-zone-bottom-dock: 14px;
+  /* Bande metaverse en pied de page — perso plein pied, UI au-dessus. */
+  --ds-zone-floor-peek: 220px;
+  --ds-graph-floor-gap: 6px;
+  --ds-band-gap: 2px;
+  --ds-band-inline-pad: 2px;
+  --ds-navbar-inline-overflow: 2px;
+  --ds-navbar-top-inset: max(0px, env(safe-area-inset-top, 0px));
+  --ds-navbar-shell-radius: var(--radius-md);
+  --ds-navbar-pad-top: 0px;
+  --ds-navbar-pad-bottom: 0px;
+  --ds-navbar-inner-gap: 0px;
+  --ds-exchange-shell-radius: var(--radius-lg);
+  --ds-exchange-pad: 6px;
+  --ds-exchange-gap: 4px;
+  --ds-exchange-margin: 0px;
+  --ds-exchange-row-gap: 2px;
+  --ds-exchange-shell-width: 100%;
+  --ds-exchange-font-min: 0.5rem;
+  --ds-zone-market: var(--ds-zone-chart);
+
+  /* Hub column ratio 35/65 — conservé */
+  --ds-hub-exchange-fr: 7;
+  --ds-hub-chart-fr: 13;
+
+  /* Touch targets @ 250 — réalistes */
+  --ds-touch-min: 32px;
+  --ds-icon-btn: 28px;
+
+  /* ═══════════════════════════════════════════════════════════
+   * Bridge theme.css (chargé avant) — remap sémantique sans suppression
+   * ═══════════════════════════════════════════════════════════ */
+  --accent-primary: var(--accent-cyan);
+  --accent-primary-rgb: var(--accent-cyan-rgb);
+  --accent-secondary: var(--accent-purple);
+  --accent-secondary-rgb: var(--accent-purple-rgb);
+  --accent-mid: #3d9fb0;
+  --accent-mid-rgb: 61, 159, 176;
+
+  --ui-accent: var(--accent-cyan);
+  --ui-accent-rgb: var(--accent-cyan-rgb);
+  --ui-accent-2: var(--accent-purple);
+  --ui-accent-2-rgb: var(--accent-purple-rgb);
+  --ui-border: var(--border-subtle);
+  --ui-border-hover: rgba(var(--accent-cyan-rgb), 0.28);
+  --ui-border-active: var(--border-active);
+  --ui-glow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --ui-glow-strong: 0 2px 6px rgba(0, 0, 0, 0.4);
+  --ui-glow-accent: 0 0 0 1px rgba(var(--accent-cyan-rgb), 0.18);
+  --ui-glow-accent-strong: 0 0 0 1px rgba(var(--accent-cyan-rgb), 0.28);
+  --ui-glow-magenta: 0 0 0 1px rgba(var(--ds-neon-magenta-rgb), 0.2);
+
+  --electric-cyan: var(--accent-cyan);
+  --electric-cyan-rgb: var(--accent-cyan-rgb);
+  --electric-violet: var(--accent-purple);
+  --electric-violet-rgb: var(--accent-purple-rgb);
+
+  --bg-base: var(--bg-primary);
+  --bg-base-rgb: var(--bg-primary-rgb);
+  --bg-deep: var(--bg-primary);
+  --bg-deep-rgb: var(--bg-primary-rgb);
+  --bg-elevated: var(--surface-elevated);
+  --bg-elevated-rgb: var(--surface-elevated-rgb);
+  --bg-body-top: var(--bg-primary);
+  --bg-body-bottom: var(--bg-secondary);
+
+  --text-primary: var(--text-primary-ds);
+  --text-primary-rgb: 232, 238, 245;
+  --text-bright: #ffffff;
+  --text-soft: #dce4ee;
+  --text-muted: var(--text-secondary-ds);
+  --text-muted-rgb: 139, 155, 176;
+  --text-dim: var(--text-muted-ds);
+  --text-dim-rgb: 92, 107, 126;
+  --text-muted-strong: #b8c4d4;
+  --text-faint: rgba(232, 238, 245, 0.72);
+  --text-ghost: rgba(232, 238, 245, 0.45);
+  --text-placeholder: var(--text-muted-ds);
+  --text-disabled: rgba(232, 238, 245, 0.32);
+  --text-link: var(--accent-cyan);
+
+  --color-positive: var(--success);
+  --color-positive-rgb: var(--success-rgb);
+  --color-positive-bright: #3ee09a;
+  --color-negative: var(--danger);
+  --color-negative-rgb: var(--danger-rgb);
+  --color-negative-soft: #f08a9a;
+  --chart-trend-up: var(--success);
+  --chart-trend-up-rgb: var(--success-rgb);
+  --chart-trend-down: var(--danger);
+  --chart-trend-down-rgb: var(--danger-rgb);
+  --color-warning: var(--warning);
+  --color-warning-rgb: var(--warning-rgb);
+  --electric-green: var(--success);
+  --electric-green-rgb: var(--success-rgb);
+  --status-online: var(--success);
+  --status-online-rgb: var(--success-rgb);
+  --status-online-glow: rgba(var(--success-rgb), 0.35);
+  --navbar-led-online: var(--success);
+  --navbar-led-online-rgb: var(--success-rgb);
+  --navbar-led-online-glow: rgba(var(--success-rgb), 0.35);
+
+  --border-faint: rgba(255, 255, 255, 0.04);
+  --border-soft: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(var(--accent-cyan-rgb), 0.35);
+  --border-accent-hover: rgba(var(--accent-cyan-rgb), 0.5);
+
+  --surface-info-bg: rgba(var(--accent-cyan-rgb), 0.08);
+  --surface-info-border: rgba(var(--accent-cyan-rgb), 0.22);
+  --surface-success-bg: rgba(var(--success-rgb), 0.1);
+  --surface-success-border: rgba(var(--success-rgb), 0.28);
+  --surface-warning-bg: rgba(var(--warning-rgb), 0.1);
+  --surface-warning-border: rgba(var(--warning-rgb), 0.28);
+  --surface-error-bg: rgba(var(--danger-rgb), 0.1);
+  --surface-error-border: rgba(var(--danger-rgb), 0.28);
+  --surface-focus-ring: rgba(var(--accent-cyan-rgb), 0.4);
+
+  --glass-blur: var(--glass-blur-fintech);
+  --glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    var(--shadow-card);
+
+  --tab-accent: var(--accent-cyan);
+  --tab-accent-rgb: var(--accent-cyan-rgb);
+  --tab-accent-2: var(--accent-purple);
+  --tab-accent-2-rgb: var(--accent-purple-rgb);
+  --glass-tab-tint-active: rgba(var(--accent-cyan-rgb), 0.1);
+  --glass-tab-border-active-color: rgba(var(--accent-cyan-rgb), 0.4);
+  --glass-tab-glow: none;
+
+  --cta-radius-sm: var(--radius-sm);
+  --cta-radius-md: var(--radius-md);
+  --cta-radius-lg: 12px;
+  --cta-height-sm: 22px;
+  --cta-height-md: 28px;
+  --cta-height-lg: 34px;
+  --cta-font-sm: 0.4375rem;
+  --cta-font-md: 0.5625rem;
+  --cta-font-lg: 0.625rem;
+  --cta-disabled-opacity: 0.48;
+  --cta-focus-ring: var(--shadow-focus);
+
+  --cta-primary-text: #050a12;
+  --cta-primary-fill: var(--accent-cyan);
+  --cta-primary-fill-hover: #3dd4e6;
+  --cta-primary-border: rgba(var(--accent-cyan-rgb), 0.65);
+  --cta-primary-bg: var(--cta-primary-fill);
+  --cta-primary-bg-hover: var(--cta-primary-fill-hover);
+  --cta-primary-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 1px 4px rgba(0, 0, 0, 0.28);
+  --cta-primary-shadow-hover:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 2px 8px rgba(0, 0, 0, 0.32);
+  --cta-primary-text-glow: none;
+
+  --cta-secondary-text: var(--text-primary-ds);
+  --cta-secondary-fill: rgba(var(--surface-elevated-rgb), 0.92);
+  --cta-secondary-fill-hover: rgba(var(--surface-hover-rgb), 0.95);
+  --cta-secondary-border: var(--border-default-ds);
+  --cta-secondary-bg: var(--cta-secondary-fill);
+  --cta-secondary-bg-hover: var(--cta-secondary-fill-hover);
+  --cta-secondary-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --cta-secondary-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  --cta-tertiary-text: var(--text-secondary-ds);
+  --cta-tertiary-fill: transparent;
+  --cta-tertiary-fill-hover: rgba(255, 255, 255, 0.04);
+  --cta-tertiary-border: transparent;
+  --cta-tertiary-bg: var(--cta-tertiary-fill);
+  --cta-tertiary-bg-hover: var(--cta-tertiary-fill-hover);
+  --cta-tertiary-shadow: none;
+  --cta-tertiary-shadow-hover: none;
+
+  --cta-accent-text: var(--text-primary-ds);
+  --cta-accent-fill: linear-gradient(
+    118deg,
+    rgba(var(--accent-cyan-rgb), 0.85) 0%,
+    rgba(var(--accent-purple-rgb), 0.55) 100%
+  );
+  --cta-accent-fill-hover: linear-gradient(
+    118deg,
+    rgba(var(--accent-cyan-rgb), 0.95) 0%,
+    rgba(var(--accent-purple-rgb), 0.65) 100%
+  );
+  --cta-accent-border: rgba(var(--accent-purple-rgb), 0.35);
+  --cta-accent-bg: var(--cta-accent-fill);
+  --cta-accent-bg-hover: var(--cta-accent-fill-hover);
+  --cta-accent-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --cta-accent-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  --cta-accent-text-glow: none;
+
+  --cta-danger-text: var(--text-primary-ds);
+  --cta-danger-fill: rgba(var(--danger-rgb), 0.85);
+  --cta-danger-fill-hover: rgba(var(--danger-rgb), 0.95);
+  --cta-danger-border: rgba(var(--danger-rgb), 0.45);
+  --cta-danger-bg: var(--cta-danger-fill);
+  --cta-danger-bg-hover: var(--cta-danger-fill-hover);
+
+  --dock-tab-cyan: var(--accent-cyan);
+  --showcase-tab-cyan: var(--accent-cyan);
+
+  --glow-primary: rgba(var(--accent-cyan-rgb), 0.12);
+  --glow-warm: rgba(var(--accent-purple-rgb), 0.1);
+}

@@ -1,0 +1,287 @@
+/* Charte boutons — Pass 1 fintech (primary / secondary / tertiary)
+ * Classes legacy (.cta--swap, .cta--claim, …) conservées.
+ */
+
+.cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin: 0;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  font-family: inherit;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  overflow: visible;
+  transition:
+    transform var(--cta-transition, 160ms ease),
+    box-shadow var(--cta-transition, 160ms ease),
+    background var(--cta-transition, 160ms ease),
+    border-color var(--cta-transition, 160ms ease),
+    color var(--cta-transition, 160ms ease),
+    opacity var(--cta-transition, 160ms ease);
+}
+
+.cta--sm {
+  min-height: var(--cta-height-sm, 22px);
+  height: auto;
+  padding: var(--cta-padding-sm, 0 6px);
+  border-radius: var(--cta-radius-sm, 8px);
+  font-size: var(--cta-font-sm, 0.4375rem);
+}
+
+.cta--md {
+  min-height: var(--cta-height-md, 28px);
+  height: auto;
+  padding: var(--cta-padding-md, 0 10px);
+  border-radius: var(--cta-radius-md, 10px);
+  font-size: var(--cta-font-md, 0.5625rem);
+}
+
+.cta--lg {
+  min-height: var(--cta-height-lg, 34px);
+  height: auto;
+  padding: var(--cta-padding-lg, 0 14px);
+  border-radius: var(--cta-radius-lg, 12px);
+  font-size: var(--cta-font-lg, 0.625rem);
+}
+
+/* PRIMARY — SWAP / Créer wallet */
+.cta--swap,
+.cta--primary {
+  color: var(--cta-primary-text, #050a12);
+  -webkit-text-fill-color: var(--cta-primary-text, #050a12);
+  background: var(--cta-primary-bg, var(--accent-cyan, #2ec4d6));
+  background-color: var(--accent-cyan, #2ec4d6);
+  border-color: var(--cta-primary-border, rgba(46, 196, 214, 0.65));
+  box-shadow: var(--cta-primary-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.18));
+  text-shadow: var(--cta-primary-text-glow, none);
+}
+
+.cta--swap:hover:not(:disabled),
+.cta--primary:hover:not(:disabled) {
+  color: var(--cta-primary-text, #050a12);
+  -webkit-text-fill-color: var(--cta-primary-text, #050a12);
+  background: var(--cta-primary-bg-hover, #3dd4e6);
+  background-color: var(--cta-primary-fill-hover, #3dd4e6);
+  border-color: rgba(var(--accent-cyan-rgb, 46, 196, 214), 0.8);
+  transform: translateY(-1px);
+  box-shadow: var(--cta-primary-shadow-hover, 0 2px 8px rgba(0, 0, 0, 0.32));
+}
+
+.cta--swap:active:not(:disabled),
+.cta--primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.cta--swap:disabled,
+.cta--primary:disabled {
+  opacity: var(--cta-disabled-opacity, 0.48);
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(0.15);
+}
+
+.cta--swap:focus-visible,
+.cta--primary:focus-visible {
+  outline: none;
+  box-shadow: var(--cta-focus-ring, var(--shadow-focus));
+}
+
+.cta--swap.showcase-news__filter--active,
+.cta--swap.showcase-chart__ind-btn--active,
+.cta--swap.showcase-chat__icon-btn--active,
+.cta--swap.showcase-chat__dropdown-trigger--active,
+.cta--swap.showcase-chart__type-icon-btn--active {
+  background: var(--cta-primary-bg-hover, #3dd4e6);
+  border-color: rgba(var(--accent-cyan-rgb, 46, 196, 214), 0.75);
+  box-shadow: inset 0 0 0 1px rgba(var(--accent-cyan-rgb, 46, 196, 214), 0.25);
+}
+
+/* SECONDARY — Envoyer / Recevoir / Consulter */
+.cta--secondary {
+  color: var(--cta-secondary-text, var(--ds-text-primary, #e8eef5));
+  background: var(--cta-secondary-bg, rgba(13, 24, 40, 0.92));
+  background-color: var(--surface-elevated, #0d1828);
+  border-color: var(--cta-secondary-border, rgba(255, 255, 255, 0.1));
+  box-shadow: var(--cta-secondary-shadow, none);
+  text-shadow: none;
+}
+
+.cta--secondary:hover:not(:disabled) {
+  background: var(--cta-secondary-bg-hover, rgba(17, 31, 50, 0.95));
+  background-color: var(--surface-hover, #111f32);
+  border-color: rgba(var(--accent-cyan-rgb, 46, 196, 214), 0.28);
+  box-shadow: var(--cta-secondary-shadow-hover, none);
+}
+
+.cta--secondary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.cta--secondary:disabled {
+  opacity: var(--cta-disabled-opacity, 0.48);
+  cursor: not-allowed;
+}
+
+.cta--secondary:focus-visible {
+  outline: none;
+  box-shadow: var(--cta-focus-ring, var(--shadow-focus));
+}
+
+/* TERTIARY — copy / refresh / icon actions */
+.cta--tertiary,
+.cta--ghost {
+  color: var(--cta-tertiary-text, var(--ds-text-secondary, #8b9bb0));
+  background: var(--cta-tertiary-bg, transparent);
+  border-color: var(--cta-tertiary-border, transparent);
+  box-shadow: none;
+  text-shadow: none;
+}
+
+.cta--tertiary:hover:not(:disabled),
+.cta--ghost:hover:not(:disabled) {
+  color: var(--ds-text-primary, #e8eef5);
+  background: var(--cta-tertiary-bg-hover, rgba(255, 255, 255, 0.04));
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.cta--tertiary:disabled,
+.cta--ghost:disabled {
+  opacity: var(--cta-disabled-opacity, 0.48);
+  cursor: not-allowed;
+}
+
+.cta--tertiary:focus-visible,
+.cta--ghost:focus-visible {
+  outline: none;
+  box-shadow: var(--cta-focus-ring, var(--shadow-focus));
+}
+
+/* CLAIM — accent ponctuel (violet/magenta adouci, legacy conservé) */
+.cta--claim {
+  color: var(--cta-accent-text, #e8eef5);
+  background: var(--cta-accent-bg, linear-gradient(118deg, rgba(46, 196, 214, 0.85), rgba(123, 108, 255, 0.55)));
+  background-color: var(--accent-purple, #7b6cff);
+  border: 1px solid var(--cta-accent-border, rgba(123, 108, 255, 0.35));
+  border-radius: var(--cta-radius-md, 10px);
+  box-shadow: var(--cta-accent-shadow, inset 0 1px 0 rgba(255, 255, 255, 0.12));
+  text-shadow: none;
+  filter: none;
+}
+
+.cta--claim::before {
+  content: '';
+  position: absolute;
+  inset: -20% -40%;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    var(--border-faint, rgba(255, 255, 255, 0.08)) 38%,
+    var(--surface-shine-strong, rgba(255, 255, 255, 0.2)) 50%,
+    var(--border-faint, rgba(255, 255, 255, 0.08)) 62%,
+    transparent 80%
+  );
+  transform: translateX(-145%) skewX(-18deg);
+  transition: transform 340ms ease;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.55;
+}
+
+.cta--claim > * {
+  position: relative;
+  z-index: 2;
+}
+
+.cta--claim:hover:not(:disabled) {
+  color: var(--cta-accent-text, #e8eef5);
+  background: var(--cta-accent-bg-hover);
+  background-color: var(--accent-purple, #7b6cff);
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow: var(--cta-accent-shadow-hover, inset 0 1px 0 rgba(255, 255, 255, 0.16));
+}
+
+.cta--claim:hover:not(:disabled)::before {
+  transform: translateX(145%) skewX(-18deg);
+}
+
+.cta--claim:active:not(:disabled) {
+  transform: translateY(0);
+  filter: brightness(1.02);
+}
+
+.cta--claim:focus-visible {
+  outline: none;
+  box-shadow: var(--cta-focus-ring, var(--shadow-focus));
+}
+
+.cta--claim:disabled {
+  opacity: var(--cta-disabled-opacity, 0.48);
+  filter: grayscale(0.2);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.cta--claim:disabled::before {
+  display: none;
+}
+
+/* Danger */
+.cta--danger {
+  color: var(--cta-danger-text, #e8eef5);
+  background: var(--cta-danger-bg, rgba(232, 93, 117, 0.85));
+  border-color: var(--cta-danger-border, rgba(232, 93, 117, 0.45));
+  box-shadow: var(--cta-danger-shadow, none);
+}
+
+.cta--danger:hover:not(:disabled) {
+  background: var(--cta-danger-bg-hover, rgba(232, 93, 117, 0.95));
+}
+
+.cta--danger:disabled {
+  opacity: var(--cta-disabled-opacity, 0.48);
+  cursor: not-allowed;
+}
+
+.cta--danger:focus-visible {
+  outline: none;
+  box-shadow: var(--cta-focus-ring, var(--shadow-focus));
+}
+
+.cta.cta--icon-only {
+  padding: 0;
+  min-width: var(--ds-icon-btn, var(--cta-height-sm, 24px));
+  width: var(--ds-icon-btn, var(--cta-height-sm, 24px));
+  max-width: var(--ds-icon-btn, var(--cta-height-sm, 24px));
+  min-height: var(--ds-icon-btn, var(--cta-height-sm, 22px));
+  border-radius: var(--ds-radius-sm, 8px);
+}
+
+.cta.cta--icon-only svg {
+  width: 14px;
+  height: 12px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta,
+  .cta--claim::before {
+    transition: none;
+  }
+}

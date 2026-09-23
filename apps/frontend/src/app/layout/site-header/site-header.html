@@ -1,0 +1,61 @@
+<header class="site-header" [class.site-header--scrolled]="scrolled()">
+  <div class="site-header__inner">
+    <div class="site-header__brand">
+      <app-logo-stl-viewer
+        variant="mark"
+        ariaLabel="Logo DartChain — glisser pour tourner"
+        class="site-header__logo"
+        appLogoRelay="source"
+      />
+      <a routerLink="/" class="site-header__name" (click)="closeMenu()">
+        dartchain<span class="site-header__tld">.review</span>
+      </a>
+    </div>
+
+    <button
+      type="button"
+      class="site-header__burger"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="site-nav"
+      (click)="toggleMenu()"
+    >
+      <span class="visually-hidden">Menu</span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+
+    <nav
+      id="site-nav"
+      class="site-header__nav"
+      [class.site-header__nav--open]="menuOpen()"
+      aria-label="Navigation principale"
+    >
+      <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeMenu()">Accueil</a>
+      <a routerLink="/comprendre" routerLinkActive="is-active" (click)="closeMenu()">Comprendre</a>
+      <a routerLink="/r4v3" routerLinkActive="is-active" (click)="closeMenu()">R4V3</a>
+      <a routerLink="/faq" routerLinkActive="is-active" (click)="closeMenu()">FAQ</a>
+      <a routerLink="/ressources" routerLinkActive="is-active" (click)="closeMenu()">Ressources</a>
+      <div class="site-header__ctas">
+        @if (auth.isAuthenticated()) {
+          <button type="button" class="cta cta--md cta--secondary review-cta" (click)="logout()">
+            {{ auth.user()?.displayName }} · Quitter
+          </button>
+        } @else {
+          <a routerLink="/connexion" class="site-header__auth-link" (click)="closeMenu()">Connexion</a>
+          <a routerLink="/inscription" class="cta cta--md cta--secondary review-cta" (click)="closeMenu()">
+            Créer un compte
+          </a>
+        }
+        <a
+          class="cta cta--md cta--primary review-cta"
+          href="https://dartchain.pages.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          (click)="closeMenu()"
+        >
+          Ouvrir la démo
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>

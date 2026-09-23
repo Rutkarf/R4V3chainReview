@@ -1,0 +1,80 @@
+:host {
+  display: contents;
+  pointer-events: none;
+}
+
+/* Vols visibles (sous le header sticky 50, au-dessus du contenu 10) */
+.logo-relay-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.logo-relay-layer--flight {
+  z-index: 45;
+}
+
+.logo-relay-layer--behind {
+  z-index: 1;
+}
+
+.logo-relay-layer[hidden] {
+  display: none !important;
+}
+
+.logo-relay-clone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: hidden;
+  will-change: transform, opacity, width, height;
+  filter: drop-shadow(0 0 18px rgba(35, 87, 137, 0.35));
+}
+
+.logo-relay-clone canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.logo-relay-clone--lane {
+  filter: drop-shadow(0 0 22px rgba(35, 87, 137, 0.45));
+}
+
+.logo-relay-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(61, 111, 158, 0.4) 0%,
+    rgba(35, 87, 137, 0.12) 55%,
+    transparent 100%
+  );
+  filter: blur(2px);
+  will-change: transform, opacity;
+  z-index: 0;
+}
+
+.logo-relay-lane {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1px;
+  border-radius: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(35, 87, 137, 0.35) 20%,
+    rgba(61, 111, 158, 0.2) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+  transform-origin: top center;
+  z-index: 0;
+}

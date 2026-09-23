@@ -1,0 +1,20 @@
+.r4v3-doc {
+  max-width: none;
+  padding: 0 0 5.5rem;
+}
+
+.r4v3-doc__body {
+  max-width: var(--mkt-prose, 680px);
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 0;
+}
+
+.r4v3-doc .doc__lead {
+  margin-top: 0.75rem;
+}
+
+.r4v3-doc .review-cta.cta--md {
+  min-height: 40px;
+  padding: 0 1rem;
+  font-size: 0.68rem;
+}

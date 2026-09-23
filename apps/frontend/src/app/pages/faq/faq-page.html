@@ -1,0 +1,97 @@
+<article class="doc">
+  <app-doc-eyebrow label="FAQ" />
+  <h1>Questions fréquentes sur DartChain et R4V3.</h1>
+  <p class="doc__lead">
+    Réponses sourcées sur le README et le codebase. Posez une question : elle apparaît ici après
+    soumission (réponse officielle éventuelle plus tard).
+  </p>
+
+  <div class="faq-list">
+    @for (item of faq; track item.id) {
+      <div class="faq-item" [class.faq-item--open]="isOpen(item.id)">
+        <button
+          type="button"
+          class="faq-item__q"
+          [attr.aria-expanded]="isOpen(item.id)"
+          [attr.aria-controls]="'page-faq-' + item.id"
+          (click)="toggleFaq(item)"
+        >
+          <span>{{ item.question }}</span>
+          <span class="faq-item__icon" aria-hidden="true"></span>
+        </button>
+        <div class="faq-item__a" [id]="'page-faq-' + item.id" [hidden]="!isOpen(item.id)">
+          <p>{{ item.answer }}</p>
+        </div>
+      </div>
+    }
+  </div>
+
+  <section class="faq-community" aria-labelledby="faq-community-title">
+    <h2 id="faq-community-title">Questions de la communauté</h2>
+    @if (communityQuestions().length === 0) {
+      <p class="faq-community__empty">Aucune question soumise pour le moment.</p>
+    } @else {
+      <ul class="faq-community__list">
+        @for (q of communityQuestions(); track q.id) {
+          <li>
+            <h3>{{ q.title }}</h3>
+            <p>{{ q.body }}</p>
+            <footer>
+              <span>{{ q.authorDisplayName }}</span>
+              <span class="faq-status">{{ q.status === 'PENDING' ? 'En attente' : q.status }}</span>
+            </footer>
+            @if (q.officialAnswer) {
+              <div class="faq-official">
+                <strong>Réponse officielle</strong>
+                <p>{{ q.officialAnswer }}</p>
+              </div>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  <section class="faq-submit" aria-labelledby="faq-submit-title">
+    <h2 id="faq-submit-title">Poser une question</h2>
+    @if (auth.isAuthenticated()) {
+      <p class="faq-submit__hint">
+        Connecté en tant que <strong>{{ auth.user()?.displayName }}</strong>. Votre question sera
+        visible publiquement après envoi.
+      </p>
+      <form class="auth-form" [formGroup]="form" (ngSubmit)="submitQuestion()">
+        <label class="auth-field">
+          <span>Titre</span>
+          <input type="text" formControlName="title" maxlength="220" />
+        </label>
+        <label class="auth-field">
+          <span>Votre question (20 caractères min.)</span>
+          <textarea formControlName="body" rows="5" maxlength="4000"></textarea>
+        </label>
+        @if (submitError()) {
+          <p class="auth-error" role="alert">{{ submitError() }}</p>
+        }
+        @if (submitOk()) {
+          <p class="auth-ok" role="status">Question envoyée.</p>
+        }
+        <button type="submit" class="cta cta--md cta--primary review-cta" [disabled]="submitting()">
+          {{ submitting() ? 'Envoi…' : 'Soumettre' }}
+        </button>
+      </form>
+    } @else {
+      <p class="faq-submit__hint">
+        Créez un compte (e-mail + mot de passe) pour soumettre une question. Aucune seed phrase ni
+        clé privée n’est demandée.
+      </p>
+      <div class="doc__actions">
+        <a routerLink="/inscription" class="cta cta--md cta--primary review-cta">Créer un compte</a>
+        <a routerLink="/connexion" class="cta cta--md cta--secondary review-cta">Se connecter</a>
+      </div>
+    }
+  </section>
+
+  <div class="doc__actions">
+    <a routerLink="/" class="cta cta--md cta--secondary review-cta">Retour à l’accueil</a>
+    <a routerLink="/ressources" class="cta cta--md cta--primary review-cta">Liens officiels</a>
+  </div>
+</article>

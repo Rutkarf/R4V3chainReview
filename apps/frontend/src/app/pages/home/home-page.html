@@ -1,0 +1,325 @@
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__atmosphere" aria-hidden="true">
+    <div class="hero__glow"></div>
+    <div class="hero__grid"></div>
+    <div class="hero__orb hero__orb--a"></div>
+    <div class="hero__orb hero__orb--b"></div>
+    <div class="hero__noise"></div>
+  </div>
+
+  <div class="hero__layout">
+    <div class="hero__copy">
+      <h1 id="hero-title" class="hero__title">
+        <span class="hero__title-line hero__title-line--primary">TESTER DARTCHAIN</span>
+        <span class="hero__title-line">sans acheter.</span>
+      </h1>
+
+      <p class="hero__lead">
+        Hub pédagogique autour d’une chaîne démo immersive — wallet, swap LaunchLab, jumeau urbain
+        Marseille. <strong>R4V3</strong> est une unité de lecture testnet, pas une offre d’achat.
+      </p>
+
+      <div class="hero__actions">
+        <a
+          class="cta cta--lg cta--primary review-cta"
+          href="https://dartchain.pages.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-cta="demo-hero"
+        >
+          Ouvrir la démo
+        </a>
+        <a routerLink="/comprendre" class="hero__secondary" data-cta="comprendre-hero"
+          >Comprendre DartChain</a
+        >
+      </div>
+    </div>
+
+    <div class="hero__visual" aria-hidden="false">
+      <app-logo-stl-viewer
+        variant="hero"
+        class="hero__gem"
+        ariaLabel="Logo DartChain — glisser pour tourner"
+        appLogoRelay="target"
+        logoRelayId="home-hero"
+      />
+    </div>
+  </div>
+</section>
+
+<section class="proof-bar" id="preuves" aria-label="Preuves vérifiables" appReveal>
+  <div class="section__inner proof-bar__inner">
+    <ul class="proof-bar__list">
+      <li>
+        <button
+          type="button"
+          class="health-pill"
+          [class.health-pill--up]="healthStatus() === 'up'"
+          [class.health-pill--down]="healthStatus() === 'down'"
+          [class.health-pill--checking]="healthStatus() === 'checking'"
+          (click)="refreshHealth()"
+          [attr.aria-label]="healthLabel()"
+        >
+          <span class="dot" [class.dot--live]="healthStatus() === 'up'"></span>
+          {{ healthLabel() }}
+        </button>
+      </li>
+      <li>chain-id 3377</li>
+      <li>
+        <a href="https://github.com/Rutkarf/dartchain" target="_blank" rel="noopener noreferrer"
+          >Code source</a
+        >
+      </li>
+      @if (healthCheckedAt(); as checked) {
+        <li class="proof-bar__checked">Vérifié {{ checked | date: 'HH:mm' }}</li>
+      }
+    </ul>
+    <p class="proof-bar__warn" role="note">
+      R4V3 est un jeton de démonstration. Aucune valeur monétaire garantie. Contenu éducatif — pas un
+      conseil financier.
+    </p>
+  </div>
+</section>
+
+<section class="section" id="produit" aria-labelledby="product-title" appReveal>
+  <div class="section__inner">
+    <p class="section__eyebrow">Produit</p>
+    <h2 id="product-title" class="section__title">Une démo full-stack pour apprendre en faisant.</h2>
+    <p class="section__lead">
+      Trois axes dans une seule expérience — sans dépôt d’argent réel, sans custody, sans mainnet.
+    </p>
+
+    <div class="showcase">
+      <article class="showcase__row">
+        <div class="showcase__copy">
+          <span class="showcase__index">01</span>
+          <h3>Chaîne &amp; wallet</h3>
+          <p>
+            Blocs, mempool, explorer, wallet testnet et faucet pour obtenir des R4V3 de démo.
+          </p>
+        </div>
+        <div class="stage" aria-hidden="true">
+          <div class="stage__chrome">
+            <span></span><span></span><span></span>
+            <em>Wallet testnet</em>
+          </div>
+          <div class="stage__body stage__body--wallet">
+            <div class="stage__row">
+              <span>Solde</span>
+              <strong>1&nbsp;240 m4t3r</strong>
+            </div>
+            <div class="stage__row">
+              <span>Réseau</span>
+              <strong>DartChain · 3377</strong>
+            </div>
+            <div class="stage__bar"></div>
+            <div class="stage__pill">Faucet prêt</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="showcase__row showcase__row--reverse">
+        <div class="showcase__copy">
+          <span class="showcase__index">02</span>
+          <h3>Swap LaunchLab</h3>
+          <p>
+            Échanges pédagogiques R4V3 ↔ tokens d’expérimentation, sans friction financière.
+          </p>
+        </div>
+        <div class="stage" aria-hidden="true">
+          <div class="stage__chrome">
+            <span></span><span></span><span></span>
+            <em>LaunchLab</em>
+          </div>
+          <div class="stage__body stage__body--swap">
+            <div class="stage__swap-line">
+              <span>From</span>
+              <strong>R4V3</strong>
+            </div>
+            <div class="stage__swap-arrow">↓</div>
+            <div class="stage__swap-line">
+              <span>To</span>
+              <strong>EXP-DEMO</strong>
+            </div>
+            <div class="stage__pill stage__pill--soft">Swap pédagogique</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="showcase__row">
+        <div class="showcase__copy">
+          <span class="showcase__index">03</span>
+          <h3>Metaverse Marseille</h3>
+          <p>
+            Marche libre dans un jumeau OSM + Three.js, pickups M4T3R et placements RDC.
+          </p>
+        </div>
+        <div class="stage" aria-hidden="true">
+          <div class="stage__chrome">
+            <span></span><span></span><span></span>
+            <em>Vieux-Port</em>
+          </div>
+          <div class="stage__body stage__body--city">
+            <div class="stage__skyline"></div>
+            <div class="stage__skyline stage__skyline--b"></div>
+            <div class="stage__skyline stage__skyline--c"></div>
+            <div class="stage__pill">OSM · Three.js</div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt" id="fonctionnement" aria-labelledby="how-title" appReveal>
+  <div class="section__inner">
+    <p class="section__eyebrow">Comment démarrer</p>
+    <h2 id="how-title" class="section__title">Cinq étapes pour explorer.</h2>
+    <ol class="steps">
+      <li>
+        <span class="steps__num">01</span>
+        <div>
+          <h3>Ouvrir la démo</h3>
+          <p>Accédez à dartchain.pages.dev — aucune crypto réelle à déposer.</p>
+        </div>
+      </li>
+      <li>
+        <span class="steps__num">02</span>
+        <div>
+          <h3>Créer un wallet testnet</h3>
+          <p>Compte / wallet de démonstration dans le dock de l’application.</p>
+        </div>
+      </li>
+      <li>
+        <span class="steps__num">03</span>
+        <div>
+          <h3>Obtenir des R4V3</h3>
+          <p>Via le faucet, ou en ramassant des M4T3R dans le metaverse.</p>
+        </div>
+      </li>
+      <li>
+        <span class="steps__num">04</span>
+        <div>
+          <h3>Explorer</h3>
+          <p>Swap pédagogique, explorer de chaîne, hub R4V3, ville 3D, quêtes.</p>
+        </div>
+      </li>
+      <li>
+        <span class="steps__num">05</span>
+        <div>
+          <h3>Revenir ici</h3>
+          <p>Lire la FAQ, les risques, et suivre les mises à jour sur dartchain.review.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<app-r4v3-token-focus variant="landing" />
+
+<section class="section section--alt" id="transparence" aria-labelledby="trust-title" appReveal>
+  <div class="section__inner">
+    <p class="section__eyebrow">Sécurité &amp; transparence</p>
+    <h2 id="trust-title" class="section__title">Preuves vérifiables, limites assumées.</h2>
+    <p class="section__lead">
+      Plutôt que des témoignages non sourcés, voici ce que vous pouvez vérifier vous-même. Liens
+      officiels vérifiés le {{ linksVerifiedOn | date: 'dd/MM/yyyy' }}.
+    </p>
+    <ul class="trust-list">
+      <li>
+        <strong>Sources ouvertes</strong>
+        <span>GitHub public, CI, image Docker, health API Render.</span>
+      </li>
+      <li>
+        <strong>Ce qui n’existe pas</strong>
+        <span>Pas de mainnet, pas de custodian, pas d’achat R4V3, pas de rendement promis.</span>
+      </li>
+      <li>
+        <strong>Anti-phishing</strong>
+        <span>Uniquement les URLs de la page Ressources. Ignorez les DMs « support wallet ».</span>
+      </li>
+      <li>
+        <strong>Audits</strong>
+        <span>Aucun audit public n’est revendiqué ici tant qu’il n’est pas publié officiellement.</span>
+      </li>
+    </ul>
+    <a routerLink="/ressources" class="cta cta--md cta--secondary review-cta"
+      >Checklist des liens officiels</a
+    >
+  </div>
+</section>
+
+<section class="section" id="faq" aria-labelledby="faq-title" appReveal>
+  <div class="section__inner">
+    <p class="section__eyebrow">FAQ</p>
+    <h2 id="faq-title" class="section__title">Cinq questions essentielles.</h2>
+    <p class="section__lead">
+      Pour le détail : <a routerLink="/faq">page FAQ complète</a>.
+    </p>
+
+    <div class="faq-list">
+      @for (item of faqPreview; track item.id) {
+        <div class="faq-item" [class.faq-item--open]="isOpen(item.id)">
+          <button
+            type="button"
+            class="faq-item__q"
+            [attr.aria-expanded]="isOpen(item.id)"
+            [attr.aria-controls]="'faq-' + item.id"
+            (click)="toggleFaq(item)"
+          >
+            <span>{{ item.question }}</span>
+            <span class="faq-item__icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-item__a" [id]="'faq-' + item.id" [hidden]="!isOpen(item.id)">
+            <p>{{ item.answer }}</p>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section section--cta" id="newsletter" aria-labelledby="cta-title" appReveal>
+  <div class="section__inner cta-final">
+    <p class="section__eyebrow">Suivre le projet</p>
+    <h2 id="cta-title" class="section__title">Recevoir les mises à jour — sans spam trading.</h2>
+    <p class="section__lead">
+      Annonces produit, documentation et alertes anti-phishing. Stockage local pour l’instant —
+      branchement serveur prévu.
+    </p>
+
+    <form class="newsletter" (submit)="submitNewsletter($event)">
+      <label class="visually-hidden" for="newsletter-email">Adresse e-mail</label>
+      <input
+        id="newsletter-email"
+        name="email"
+        type="email"
+        autocomplete="email"
+        placeholder="vous@exemple.com"
+        [ngModel]="newsletterEmail()"
+        (ngModelChange)="newsletterEmail.set($event)"
+        required
+      />
+      <button type="submit" class="cta cta--lg cta--primary review-cta">S’inscrire</button>
+    </form>
+    @if (newsletterStatus() === 'ok') {
+      <p class="newsletter__msg newsletter__msg--ok" role="status">
+        Merci — e-mail enregistré localement sur cet appareil.
+      </p>
+    }
+    @if (newsletterStatus() === 'invalid') {
+      <p class="newsletter__msg newsletter__msg--err" role="alert">Adresse e-mail invalide.</p>
+    }
+
+    <div class="cta-final__demo">
+      <a
+        class="cta cta--lg cta--primary review-cta"
+        href="https://dartchain.pages.dev"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-cta="demo-footer"
+        >Ouvrir la démo</a
+      >
+    </div>
+  </div>
+</section>

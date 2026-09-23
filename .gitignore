@@ -1,0 +1,20 @@
+# dartchain.review monorepo
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+*.iml
+.vscode/
+!.vscode/extensions.json
+
+# Backend
+apps/backend/target/
+
+# Frontend
+apps/frontend/node_modules/
+apps/frontend/dist/
+apps/frontend/.angular/

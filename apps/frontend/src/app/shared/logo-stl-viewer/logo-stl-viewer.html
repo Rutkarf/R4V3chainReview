@@ -1,0 +1,12 @@
+<div
+  class="logo-viewer"
+  [class.logo-viewer--mark]="variant === 'mark'"
+  [class.logo-viewer--footer]="variant === 'footer'"
+  role="img"
+  [attr.aria-label]="ariaLabel"
+>
+  <div #host class="logo-viewer__canvas"></div>
+  @if (failed) {
+    <span class="logo-viewer__fallback" aria-hidden="true"></span>
+  }
+</div>
