@@ -13,10 +13,11 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LogoStlCacheService } from '../logo-stl-viewer/logo-stl-cache.service';
+import { IntroService } from '../intro-overlay/intro.service';
 import { LogoRelayFlight, LogoRelayService } from './logo-relay.service';
 import { LogoRelayStlHost } from './logo-relay-stl-host';
 
-type OverlayPhase = 'idle' | 'flight' | 'to-center' | 'descend';
+type OverlayPhase = 'idle' | 'flight' | 'descend';
 
 /**
  * Chaîne home : header → hero → centre → descente scroll → footer.
@@ -34,6 +35,7 @@ type OverlayPhase = 'idle' | 'flight' | 'to-center' | 'descend';
 export class LogoRelayOverlay implements OnInit, OnDestroy {
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly relay = inject(LogoRelayService);
+  private readonly intro = inject(IntroService);
   private readonly cache = inject(LogoStlCacheService);
   private readonly zone = inject(NgZone);
   private readonly router = inject(Router);
@@ -42,12 +44,12 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
   private layer?: HTMLDivElement;
   private stlHost?: LogoRelayStlHost;
   private lane?: HTMLDivElement;
+  private scrollHint?: HTMLDivElement;
   private raf = 0;
   private startTs = 0;
   private active: LogoRelayFlight | null = null;
   private phase: OverlayPhase = 'idle';
   private readonly duration = 1000;
-  private readonly centerDuration = 700;
   private readonly history: { x: number; y: number; s: number }[] = [];
   private readonly trailNodes: HTMLSpanElement[] = [];
 
@@ -57,20 +59,30 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
   /** Token bas masqué jusqu’au premier scroll de descente. */
   private descentRevealed = false;
   private flightGen = 0;
+  private revealAnimRaf = 0;
+  private travelerOpacity = 0;
+  private scrollBound = false;
   private readonly onScroll = () => {
-    if (this.phase === 'descend' && !this.descentRevealed) {
-      this.revealDescentTraveler();
+    if (this.atPageTop()) {
+      // Plus de scroll vers le haut : le cue SCROLL revient (même après la descente).
+      if (this.phase !== 'flight') this.restoreScrollCueAtTop();
+    } else if (this.phase === 'descend' && this.pageScrollY() > 40) {
+      this.revealTravelerFromScrollCue();
     }
-    if (
-      this.phase === 'to-center' ||
-      this.phase === 'descend' ||
-      this.phase === 'flight'
-    ) {
+    if (this.phase === 'descend' || this.phase === 'flight') {
       this.stlHost?.nudgeScrollSpin();
     }
     this.scheduleDescent();
   };
-  private readonly onResize = () => this.scheduleDescent();
+  private readonly onResize = () => {
+    if (this.phase === 'descend' && !this.descentRevealed) {
+      const park = this.parkPose();
+      this.traveler = park;
+      this.stlHost?.setPose(park.x, park.y, park.s, 0, 0);
+      this.poseScrollHint(park.x, park.y, true);
+    }
+    this.scheduleDescent();
+  };
 
   constructor() {
     effect(() => {
@@ -96,9 +108,12 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
         filter((e): e is NavigationEnd => e instanceof NavigationEnd),
         takeUntilDestroyed(this.destroyRef),
       )
-      .subscribe(() => {
+      .subscribe((event) => {
         this.hardReset();
         this.relay.resetForNavigation();
+        if (this.intro.shouldPlay(event.urlAfterRedirects) && !this.intro.finished()) {
+          this.relay.armForIntro();
+        }
       });
   }
 
@@ -122,7 +137,7 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
       this.lane = undefined;
       this.disposeStl();
     } else {
-      this.detachScroll();
+      // Garder le listener : remonter en haut doit faire réapparaître le cue SCROLL.
       this.cancelAnim();
       this.clearTrail();
       this.lane?.remove();
@@ -209,14 +224,22 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
     const doneId = flight.id;
     this.active = null;
 
-    // Enchaînement fluide : hero → descente sans démonter le STL
+    // Hero posé : cue Scroll en bas ; le logo voyageur n’apparaît qu’au premier scroll.
     if (doneId === 'home-hero') {
       this.traveler = { x: toCx, y: toCy, s: to.width };
       this.centerFrom = { ...this.traveler };
       this.clearTrail();
-      this.zone.run(() => this.relay.completeFlight(doneId));
-      // completeFlight passe en mode descent — enchaîner tout de suite
-      this.startToCenter(gen);
+      // Masque le clone dès l’atterrissage hero — le cue Scroll prend le relais.
+      this.stlHost?.setPose(toCx, toCy, Math.max(to.width, 36), 0, 0);
+      let accepted = false;
+      this.zone.run(() => {
+        accepted = this.relay.completeFlight(doneId);
+      });
+      if (!accepted) {
+        this.hardReset();
+        return;
+      }
+      this.parkAtScrollCue(gen);
       return;
     }
 
@@ -225,7 +248,7 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
     this.zone.run(() => this.relay.completeFlight(doneId));
   }
 
-  /* —— 2) Hero → centre puis descente scroll —— */
+  /* —— 2) Cue Scroll en bas, puis logo voyageur au premier scroll —— */
 
   private async beginDescentFromHero(): Promise<void> {
     if (this.relay.isReduced() || !this.layer) {
@@ -249,15 +272,16 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
 
     this.ensureLayer('flight');
     if (!this.stlHost) {
-      this.spawnTrail(8);
       await this.mountStl(this.traveler.s, true);
     }
-    this.stlHost?.setPose(this.traveler.x, this.traveler.y, this.traveler.s, 1, 0);
-
-    this.startToCenter(++this.flightGen);
+    // Invisible tant que le cue Scroll est affiché.
+    this.stlHost?.setPose(this.traveler.x, this.traveler.y, this.traveler.s, 0, 0);
+    this.parkAtScrollCue(++this.flightGen);
   }
 
-  private startToCenter(gen: number): void {
+  /** Place le voyageur (invisible) + cue Scroll sous le DISCLAIMER. */
+  private parkAtScrollCue(gen: number): void {
+    if (gen !== this.flightGen) return;
     if (this.relay.isReduced()) {
       this.cleanupVisuals();
       this.phase = 'idle';
@@ -265,80 +289,186 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
       return;
     }
 
-    this.phase = 'to-center';
-    this.startTs = 0;
-    this.descentExitRequested = false;
+    const park = this.parkPose();
+
+    this.phase = 'descend';
     this.descentRevealed = false;
+    this.descentExitRequested = false;
+    this.traveler = park;
     this.ensureLayer('flight');
-    this.spawnTrail(8);
+    this.clearTrail();
 
     if (!this.lane && this.layer) {
       this.lane = document.createElement('div');
       this.lane.className = 'logo-relay-lane';
       this.layer.appendChild(this.lane);
     }
-    this.updateLane();
+    if (this.lane) this.lane.style.opacity = '0';
 
+    this.travelerOpacity = 0;
+    this.stlHost?.setPose(park.x, park.y, park.s, 0, 0);
+    this.poseScrollHint(park.x, park.y, true);
+    this.reportDescentRect();
+
+    // Repose après l’anim disclaimer (hero--logo-in) pour éviter un chevauchement.
+    window.setTimeout(() => {
+      if (gen !== this.flightGen || this.phase !== 'descend' || this.descentRevealed) return;
+      const again = this.parkPose();
+      this.traveler = again;
+      this.stlHost?.setPose(again.x, again.y, again.s, 0, 0);
+      this.poseScrollHint(again.x, again.y, true);
+      this.reportDescentRect();
+    }, 820);
+
+    this.attachScroll();
+
+    if (this.pageScrollY() > 40) this.revealTravelerFromScrollCue();
+  }
+
+  /** Haut de page : plus aucun scroll vers le haut. */
+  private pageScrollY(): number {
+    const el = document.scrollingElement ?? document.documentElement;
+    return Math.max(window.scrollY || 0, el.scrollTop || 0, 0);
+  }
+
+  private atPageTop(): boolean {
+    return this.pageScrollY() <= 8;
+  }
+
+  private attachScroll(): void {
+    if (this.scrollBound) return;
+    this.scrollBound = true;
     this.zone.runOutsideAngular(() => {
       window.addEventListener('scroll', this.onScroll, { passive: true });
       window.addEventListener('resize', this.onResize, { passive: true });
-      this.raf = requestAnimationFrame((t) => this.tickToCenter(t, gen));
     });
   }
 
-  private tickToCenter(now: number, gen: number): void {
-    if (gen !== this.flightGen) return;
-    const host = this.stlHost;
-    if (!host || this.phase !== 'to-center') return;
+  /** Réaffiche le cue SCROLL sous le disclaimer. */
+  private restoreScrollCueAtTop(): void {
+    if (this.phase === 'descend') {
+      this.hideTravelerToScrollCue();
+      return;
+    }
+    if (this.phase !== 'idle') return;
+    this.ensureLayer('flight');
+    this.phase = 'descend';
+    this.descentRevealed = false;
+    this.descentExitRequested = false;
+    const park = this.parkPose();
+    this.traveler = park;
+    this.travelerOpacity = 0;
+    this.stlHost?.setPose(park.x, park.y, park.s, 0, 0);
+    this.poseScrollHint(park.x, park.y, true);
+    this.attachScroll();
+  }
 
-    if (!this.startTs) this.startTs = now;
-    const t = Math.min(1, (now - this.startTs) / this.centerDuration);
-    const e = easeOutCubic(t);
+  /**
+   * Emplacement du cue Scroll / logo.stl au repos :
+   * centré sous le bandeau DISCLAIMER (jamais par-dessus).
+   */
+  private parkPose(): { x: number; y: number; s: number } {
+    const s = 44;
+    const x = window.innerWidth / 2;
+    const disc = document.querySelector('.hero__disclaimer') as HTMLElement | null;
+    // À ras sous le disclaimer (jamais remonté dans le bandeau).
+    const gap = 8;
+    const cueHalf = 34;
+    const maxY = window.innerHeight - this.scrollBottomSafe() - cueHalf;
 
-    const targetX = window.innerWidth / 2;
-    const targetS = 58;
-    // Centré, le plus bas possible tout en restant visible sur le 1er écran
-    const tokenHalf = targetS / 2;
-    const bottomSafe = window.innerWidth <= 720 ? 88 : 28;
-    const lowestVisible = window.innerHeight - tokenHalf - bottomSafe;
-    const targetY = Math.max(this.centerFrom.y + 40, lowestVisible);
+    if (disc) {
+      const r = disc.getBoundingClientRect();
+      return { x, y: r.bottom + gap + cueHalf, s };
+    }
 
-    const x = lerp(this.centerFrom.x, targetX, e);
-    const y = lerp(this.centerFrom.y, targetY, e);
-    const s = lerp(this.centerFrom.s, targetS, e);
+    return { x, y: maxY, s };
+  }
 
-    this.traveler = { x, y, s };
-    // Pendant le glissement hero → bas : visible ; ensuite masqué jusqu’au scroll
-    host.setPose(x, y, s, 1, e * 160);
-    this.pushTrail(x, y, s);
-    this.reportDescentRect();
-    this.updateLane();
+  /** Remplace le cue Scroll par le logo.stl voyageur (fondu + léger scale). */
+  private revealTravelerFromScrollCue(): void {
+    if (this.phase !== 'descend' || this.descentRevealed) return;
+    this.descentRevealed = true;
+    this.fadeScrollHint();
+    cancelAnimationFrame(this.revealAnimRaf);
 
-    if (t < 1) {
-      this.raf = requestAnimationFrame((ts) => this.tickToCenter(ts, gen));
+    const park = this.parkPose();
+    this.traveler = park;
+    const fromOp = this.travelerOpacity;
+    const start = performance.now();
+    const dur = this.relay.isReduced() ? 1 : 560;
+
+    const tick = (now: number) => {
+      if (this.phase !== 'descend') return;
+      const t = Math.min(1, (now - start) / dur);
+      const e = 1 - Math.pow(1 - t, 3);
+      const op = fromOp + (1 - fromOp) * e;
+      const scale = park.s * (0.78 + 0.22 * e);
+      this.travelerOpacity = op;
+      this.stlHost?.setPose(park.x, park.y, scale, op, (1 - e) * -14);
+      if (this.lane) this.lane.style.opacity = String(0.08 + 0.32 * e);
+      if (t < 1) {
+        this.revealAnimRaf = requestAnimationFrame(tick);
+        return;
+      }
+      this.travelerOpacity = 1;
+      this.stlHost?.setPose(park.x, park.y, park.s, 1, 0);
+      this.scheduleDescent();
+    };
+    this.revealAnimRaf = requestAnimationFrame(tick);
+  }
+
+  /** Remonte en haut : logo.stl s’efface, cue Scroll revient sous le DISCLAIMER. */
+  private hideTravelerToScrollCue(): void {
+    if (this.phase !== 'descend') return;
+    if (!this.descentRevealed) {
+      const park = this.parkPose();
+      this.traveler = park;
+      this.stlHost?.setPose(park.x, park.y, park.s, 0, 0);
+      // Toujours recalculer la pose (évite le chevauchement disclaimer).
+      this.poseScrollHint(park.x, park.y, true);
       return;
     }
 
-    this.phase = 'descend';
     this.descentRevealed = false;
-    this.clearTrail();
-    // Masquer le token bas + la lane jusqu’au premier scroll
-    host.setPose(x, y, s, 0, 0);
-    if (this.lane) this.lane.style.opacity = '0';
-    this.reportDescentRect();
-    // Si l’utilisateur a déjà scrollé pendant l’anim, révéler tout de suite
-    if (window.scrollY > 8) {
-      this.revealDescentTraveler();
-      this.scheduleDescent();
-    }
-  }
+    this.descentExitRequested = false;
+    cancelAnimationFrame(this.revealAnimRaf);
+    cancelAnimationFrame(this.raf);
+    this.raf = 0;
 
-  private revealDescentTraveler(): void {
-    if (this.descentRevealed || !this.stlHost) return;
-    this.descentRevealed = true;
-    const { x, y, s } = this.traveler;
-    this.stlHost.setPose(x, y, s, 1, 0);
-    this.updateLane(0);
+    const park = this.parkPose();
+    this.traveler = park;
+    const fromOp = this.travelerOpacity;
+    const start = performance.now();
+    const dur = this.relay.isReduced() ? 1 : 420;
+
+    this.poseScrollHint(park.x, park.y, true);
+
+    if (fromOp <= 0.02 || this.relay.isReduced()) {
+      this.travelerOpacity = 0;
+      this.stlHost?.setPose(park.x, park.y, park.s, 0, 0);
+      if (this.lane) this.lane.style.opacity = '0';
+      return;
+    }
+
+    const tick = (now: number) => {
+      if (this.phase !== 'descend') return;
+      // Si l’utilisateur redescend pendant le fondu, on laisse reveal reprendre.
+      if (this.descentRevealed) return;
+      const t = Math.min(1, (now - start) / dur);
+      const e = 1 - Math.pow(1 - t, 3);
+      const op = fromOp * (1 - e);
+      this.travelerOpacity = op;
+      this.stlHost?.setPose(park.x, park.y, park.s * (1 - 0.12 * e), op, e * 10);
+      if (this.lane) this.lane.style.opacity = String(0.35 * (1 - e));
+      if (t < 1) {
+        this.revealAnimRaf = requestAnimationFrame(tick);
+        return;
+      }
+      this.travelerOpacity = 0;
+      this.stlHost?.setPose(park.x, park.y, park.s, 0, 0);
+      if (this.lane) this.lane.style.opacity = '0';
+    };
+    this.revealAnimRaf = requestAnimationFrame(tick);
   }
 
   private scheduleDescent(): void {
@@ -364,12 +494,13 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
     const progress = clamp01((followDocY - startDocY) / span);
 
     const x = window.innerWidth / 2;
-    const tokenHalf = 29;
-    const bottomSafe = window.innerWidth <= 720 ? 88 : 28;
+    const tokenHalf = 22;
+    const bottomSafe = this.scrollBottomSafe();
     const y = window.innerHeight - tokenHalf - bottomSafe;
-    const s = 54 + Math.sin(progress * Math.PI) * 10;
+    const s = 44 + Math.sin(progress * Math.PI) * 8;
 
     this.traveler = { x, y, s };
+    this.travelerOpacity = 1;
     this.stlHost.setPose(x, y, s, 1, progress * 75);
     this.reportDescentRect();
     this.updateLane(progress);
@@ -388,13 +519,69 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
 
   private updateLane(progress = 0): void {
     if (!this.lane) return;
-    const bottomSafe = window.innerWidth <= 720 ? 88 : 36;
+    const bottomSafe = this.scrollBottomSafe();
     const endY = window.innerHeight - bottomSafe - 8;
     const startY = window.innerHeight * 0.28;
     const h = Math.max(endY - startY, 40) * (0.55 + progress * 0.45);
     this.lane.style.height = `${h}px`;
-    this.lane.style.opacity = String(0.22 + progress * 0.25);
+    this.lane.style.opacity = String(0.35 + progress * 0.3);
     this.lane.style.transform = `translate(${window.innerWidth / 2 - 1}px, ${startY}px)`;
+  }
+
+  /** Marge basse : laisse l’arc SCROLL + bob entièrement visibles. */
+  private scrollBottomSafe(): number {
+    if (window.innerWidth > 720) return 40;
+    const sticky = document.querySelector('.mobile-sticky') as HTMLElement | null;
+    const stickyOn =
+      !!sticky &&
+      sticky.classList.contains('mobile-sticky--visible') &&
+      getComputedStyle(sticky).visibility !== 'hidden';
+    const stickyH = stickyOn ? sticky!.getBoundingClientRect().height : 0;
+    if (stickyH > 8) return Math.max(128, Math.round(stickyH + 56));
+    // Accueil avant scroll : marge sous le glyphe SCROLL (stroke + bob).
+    return 56;
+  }
+
+  private ensureScrollHint(): void {
+    if (this.scrollHint || !this.layer) return;
+    const el = document.createElement('div');
+    el.className = 'logo-relay-scroll-hint';
+    el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = `
+      <span class="logo-relay-scroll-hint__mouse">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <rect x="6.5" y="1.5" width="11" height="20" rx="5.5" fill="none" stroke="currentColor" stroke-width="1.6" />
+          <circle class="logo-relay-scroll-hint__wheel" cx="12" cy="8" r="1.35" fill="currentColor" />
+        </svg>
+      </span>
+      <svg class="logo-relay-scroll-hint__arc" viewBox="0 0 148 32" width="148" height="32" aria-hidden="true">
+        <defs>
+          <path id="logo-relay-scroll-arc" d="M 14 8 Q 74 28 134 8" fill="none" />
+        </defs>
+        <text class="logo-relay-scroll-hint__arc-text">
+          <textPath href="#logo-relay-scroll-arc" xlink:href="#logo-relay-scroll-arc" startOffset="50%" text-anchor="middle">SCROLL</textPath>
+        </text>
+      </svg>
+    `;
+    this.layer.appendChild(el);
+    this.scrollHint = el;
+  }
+
+  private poseScrollHint(x: number, y: number, visible: boolean): void {
+    this.ensureScrollHint();
+    const el = this.scrollHint;
+    if (!el) return;
+    // Toujours à ras sous le disclaimer — jamais remonté par-dessus.
+    const disc = document.querySelector('.hero__disclaimer') as HTMLElement | null;
+    const top = disc ? disc.getBoundingClientRect().bottom + 8 : y;
+    el.style.transform = `translate(${x}px, ${top}px) translate(-50%, 0)`;
+    el.classList.toggle('is-live', visible);
+    if (visible) el.classList.remove('is-gone');
+  }
+
+  private fadeScrollHint(): void {
+    this.scrollHint?.classList.add('is-gone');
+    this.scrollHint?.classList.remove('is-live');
   }
 
   /* —— Helpers —— */
@@ -458,9 +645,13 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
   private cancelAnim(): void {
     cancelAnimationFrame(this.raf);
     this.raf = 0;
+    cancelAnimationFrame(this.revealAnimRaf);
+    this.revealAnimRaf = 0;
   }
 
   private detachScroll(): void {
+    if (!this.scrollBound) return;
+    this.scrollBound = false;
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('resize', this.onResize);
   }
@@ -474,6 +665,7 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
     this.active = null;
     this.descentRevealed = false;
     this.descentExitRequested = false;
+    this.travelerOpacity = 0;
     this.relay.setDescentFrom(null);
   }
 
@@ -483,6 +675,8 @@ export class LogoRelayOverlay implements OnInit, OnDestroy {
     this.clearTrail();
     this.lane?.remove();
     this.lane = undefined;
+    this.scrollHint?.remove();
+    this.scrollHint = undefined;
     if (this.layer) {
       this.layer.innerHTML = '';
       this.layer.hidden = true;
@@ -498,10 +692,6 @@ function quadBezier(a: number, b: number, c: number, t: number): number {
 
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
-}
-
-function lerp(a: number, b: number, t: number): number {
-  return a + (b - a) * t;
 }
 
 function clamp01(n: number): number {

@@ -78,12 +78,127 @@ a {
   transform: translateY(0);
 }
 
-/* Intro AMIX plein écran : page figée derrière le rideau */
-html.intro-active,
-html.intro-active body {
-  overflow: hidden;
+:root {
+  --fs-form: 0.72rem;
+  --fs-fallback: 0.8125rem;
+  --motion-state: 120ms;
+  --motion-ease-state: ease;
 }
 
+/* Appel @R4V3army puis Feed The R4V3 : page figée derrière le rideau */
+html.intro-active,
+html.intro-active body,
+html.age-gate-active,
+html.age-gate-active body,
+html.intro-handoff,
+html.intro-handoff body {
+  overflow: hidden;
+  background: #0a1220;
+}
+
+html.age-gate-active:not(.intro-active) .intro {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+html.intro-handoff .intro,
+html.intro-active.intro-handoff .intro {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+}
+
+/* Star Conquest : bandeau autour du token pendant Feed The R4V3. */
+app-particle-background {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+html.intro-feed-sc app-particle-background {
+  visibility: visible !important;
+  opacity: var(--intro-sc-opacity, 0) !important;
+  pointer-events: auto !important;
+  z-index: 19000 !important;
+  transition: opacity 0.85s cubic-bezier(0.33, 0.08, 0.2, 1) !important;
+  /* Pas de clip-path inset : il créait les lignes de cassure horizontales. */
+  clip-path: none !important;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent max(0px, calc(var(--sc-playable-top, 40%) - 120px)),
+    rgba(0, 0, 0, 0.08) max(0px, calc(var(--sc-playable-top, 40%) - 72px)),
+    rgba(0, 0, 0, 0.35) max(0px, calc(var(--sc-playable-top, 40%) - 28px)),
+    rgba(0, 0, 0, 0.75) var(--sc-playable-top, 40%),
+    #000 calc(var(--sc-playable-top, 40%) + 28px),
+    #000 calc(100% - var(--sc-playable-bottom, 40%) - 72px),
+    rgba(0, 0, 0, 0.75) calc(100% - var(--sc-playable-bottom, 40%) - 36px),
+    rgba(0, 0, 0, 0.35) calc(100% - var(--sc-playable-bottom, 40%) - 8px),
+    rgba(0, 0, 0, 0.08) calc(100% - var(--sc-playable-bottom, 40%) + 28px),
+    transparent calc(100% - var(--sc-playable-bottom, 40%) + 88px),
+    transparent 100%
+  ) !important;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent max(0px, calc(var(--sc-playable-top, 40%) - 120px)),
+    rgba(0, 0, 0, 0.08) max(0px, calc(var(--sc-playable-top, 40%) - 72px)),
+    rgba(0, 0, 0, 0.35) max(0px, calc(var(--sc-playable-top, 40%) - 28px)),
+    rgba(0, 0, 0, 0.75) var(--sc-playable-top, 40%),
+    #000 calc(var(--sc-playable-top, 40%) + 28px),
+    #000 calc(100% - var(--sc-playable-bottom, 40%) - 72px),
+    rgba(0, 0, 0, 0.75) calc(100% - var(--sc-playable-bottom, 40%) - 36px),
+    rgba(0, 0, 0, 0.35) calc(100% - var(--sc-playable-bottom, 40%) - 8px),
+    rgba(0, 0, 0, 0.08) calc(100% - var(--sc-playable-bottom, 40%) + 28px),
+    transparent calc(100% - var(--sc-playable-bottom, 40%) + 88px),
+    transparent 100%
+  ) !important;
+}
+
+html.intro-feed-sc.intro-feed-sc-lift app-particle-background {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  pointer-events: none !important;
+}
+
+html.intro-feed-sc .intro__atmosphere,
+html.intro-feed-sc .intro__grid,
+html.intro-feed-sc .intro__grain,
+html.intro-feed-sc .intro__gl {
+  /* Trou SC adouci : fondu long, plus de bord franc. */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 max(0px, calc(var(--intro-sc-mask-top, 40%) - 140px)),
+    rgba(0, 0, 0, 0.55) max(0px, calc(var(--intro-sc-mask-top, 40%) - 72px)),
+    rgba(0, 0, 0, 0.18) max(0px, calc(var(--intro-sc-mask-top, 40%) - 24px)),
+    transparent calc(var(--intro-sc-mask-top, 40%) + 8px),
+    transparent calc(var(--intro-sc-mask-bottom, 55%) - 8px),
+    rgba(0, 0, 0, 0.18) calc(var(--intro-sc-mask-bottom, 55%) + 24px),
+    rgba(0, 0, 0, 0.55) calc(var(--intro-sc-mask-bottom, 55%) + 72px),
+    #000 calc(var(--intro-sc-mask-bottom, 55%) + 140px),
+    #000 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0,
+    #000 max(0px, calc(var(--intro-sc-mask-top, 40%) - 140px)),
+    rgba(0, 0, 0, 0.55) max(0px, calc(var(--intro-sc-mask-top, 40%) - 72px)),
+    rgba(0, 0, 0, 0.18) max(0px, calc(var(--intro-sc-mask-top, 40%) - 24px)),
+    transparent calc(var(--intro-sc-mask-top, 40%) + 8px),
+    transparent calc(var(--intro-sc-mask-bottom, 55%) - 8px),
+    rgba(0, 0, 0, 0.18) calc(var(--intro-sc-mask-bottom, 55%) + 24px),
+    rgba(0, 0, 0, 0.55) calc(var(--intro-sc-mask-bottom, 55%) + 72px),
+    #000 calc(var(--intro-sc-mask-bottom, 55%) + 140px),
+    #000 100%
+  );
+}
+
+html.age-gate-active app-site-header,
+html.age-gate-active .app-main,
+html.age-gate-active app-site-footer,
+html.age-gate-active .mobile-sticky,
+html.age-gate-active .skip-link,
 html.intro-active app-site-header,
 html.intro-active .app-main,
 html.intro-active app-site-footer,
@@ -239,6 +354,36 @@ html.intro-done .site-header__logo {
   border: 1px solid var(--border-default-ds);
 }
 
+html.intro-active .logo-relay-layer,
+html.intro-active .logo-relay-scroll-hint {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Transition fond sombre → blanc Luluw après disparition du cue Scroll.
+   Jamais pendant age-gate / Feed The R4V3 (sinon fond crème + site masqué). */
+html:not(.intro-active):not(.age-gate-active):not(.intro-handoff),
+html:not(.intro-active):not(.age-gate-active):not(.intro-handoff) body {
+  transition: background-color 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.home-scrolled:not(.intro-active):not(.age-gate-active):not(.intro-handoff),
+html.home-scrolled:not(.intro-active):not(.age-gate-active):not(.intro-handoff) body {
+  background-color: #ede7d9;
+}
+
+html.home-scrolled:not(.intro-active):not(.age-gate-active):not(.intro-handoff) .app-main {
+  background-image: linear-gradient(
+    180deg,
+    #000 0,
+    #000 min(58vh, 480px),
+    rgba(237, 231, 217, 0.25) min(70vh, 580px),
+    #ede7d9 min(86vh, 740px)
+  );
+  transition: background-image 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 /* —— Logo relay (clone header → cibles) —— */
 .logo-relay-source {
   transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -249,25 +394,29 @@ html.intro-done .site-header__logo {
 }
 
 .logo-relay-target--waiting {
-  opacity: 0;
+  opacity: 0 !important;
+  visibility: hidden;
   transform: scale(0.82);
   filter: blur(4px);
   pointer-events: none;
   transition:
     opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.45s ease;
+    filter 0.45s ease,
+    visibility 0s linear 0.45s;
 }
 
 .logo-relay-target--landed {
   opacity: 1;
+  visibility: visible;
   transform: scale(1);
   filter: none;
   pointer-events: auto;
   transition:
     opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.35s ease;
+    filter 0.35s ease,
+    visibility 0s linear 0s;
 }
 
 .logo-relay-target--pulse {

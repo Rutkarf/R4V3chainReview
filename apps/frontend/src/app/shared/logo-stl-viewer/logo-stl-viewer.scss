@@ -14,9 +14,17 @@
 }
 
 :host(.logo-host--hero) {
-  width: min(100%, 340px);
-  height: min(52vw, 340px);
-  max-height: 340px;
+  width: min(42vw, 220px);
+  height: min(26vh, 210px);
+  max-height: 210px;
+}
+
+@media (max-width: 720px) {
+  :host(.logo-host--hero) {
+    width: min(34vw, 124px);
+    height: clamp(88px, 16svh, 118px);
+    max-height: 118px;
+  }
 }
 
 .logo-viewer {

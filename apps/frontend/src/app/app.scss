@@ -52,13 +52,32 @@
     border-top: 1px solid var(--border-subtle);
     background: rgba(0, 0, 0, 0.92);
     backdrop-filter: blur(16px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(110%);
+    transition:
+      opacity 0.28s ease,
+      transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.32s;
+  }
+
+  .mobile-sticky--visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition:
+      opacity 0.28s ease,
+      transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0s;
   }
 
   .mobile-sticky .cta {
     width: 100%;
   }
 
-  .app-main {
+  :host:has(.mobile-sticky--visible) .app-main {
     padding-bottom: 5rem;
   }
 }

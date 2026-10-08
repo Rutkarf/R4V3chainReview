@@ -1,13 +1,20 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, computed, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { catchError, of } from 'rxjs';
 import { DemoHealthService } from '../../core/demo-health.service';
 import { LogoStlViewer } from '../../shared/logo-stl-viewer/logo-stl-viewer';
 import { LogoRelayAnchorDirective } from '../../shared/logo-relay/logo-relay-anchor.directive';
 import { R4v3TokenFocus } from '../../shared/r4v3-token-focus/r4v3-token-focus';
+import { IntroService } from '../../shared/intro-overlay/intro.service';
+import { LogoRelayService } from '../../shared/logo-relay/logo-relay.service';
 import { RevealDirective } from '../../shared/reveal.directive';
 import { LANDING_FAQ, FaqItem } from './landing-faq.data';
+
+const SOURCE_REPO_API = 'https://api.github.com/repos/Rutkarf/dartchain';
+const LAST_PUSH_FALLBACK = '01:35 (24/09/2026)';
 
 const LANDING_FAQ_PREVIEW_IDS = [
   'real-crypto',
@@ -31,8 +38,17 @@ const LANDING_FAQ_PREVIEW_IDS = [
   templateUrl: './home-page.html',
   styleUrl: './home-page.scss',
 })
-export class HomePage {
+export class HomePage implements OnInit, OnDestroy {
   private readonly health = inject(DemoHealthService);
+  private readonly http = inject(HttpClient);
+  private readonly relay = inject(LogoRelayService);
+  private readonly intro = inject(IntroService);
+  private fallbackTimer = 0;
+
+  /** Le sous-titre et le texte n’entrent qu’une fois le logo posé entre les deux lignes. */
+  protected readonly logoIn = signal(false);
+  protected readonly appVersion = '0.1.0';
+  protected readonly lastPushLabel = signal<string | null>(null);
 
   protected readonly faqPreview = LANDING_FAQ.filter((item) =>
     (LANDING_FAQ_PREVIEW_IDS as readonly string[]).includes(item.id),
@@ -42,8 +58,28 @@ export class HomePage {
   protected readonly newsletterStatus = signal<'idle' | 'ok' | 'invalid'>('idle');
   protected readonly linksVerifiedOn = new Date('2026-09-21');
 
+  constructor() {
+    effect(() => {
+      this.logoIn.set(this.relay.landedIds().has('home-hero'));
+    });
+    effect(() => {
+      if (!this.intro.finished()) return;
+      window.clearTimeout(this.fallbackTimer);
+      this.fallbackTimer = window.setTimeout(() => {
+        if (!this.logoIn()) this.logoIn.set(true);
+      }, 2600);
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadLastPush();
+  }
+
+  ngOnDestroy(): void {
+    window.clearTimeout(this.fallbackTimer);
+  }
+
   protected readonly healthStatus = this.health.status;
-  protected readonly healthCheckedAt = this.health.checkedAt;
   protected readonly healthLabel = computed(() => {
     switch (this.healthStatus()) {
       case 'up':
@@ -67,6 +103,30 @@ export class HomePage {
 
   protected refreshHealth(): void {
     this.health.refresh();
+  }
+
+  private loadLastPush(): void {
+    this.http
+      .get<{ pushed_at?: string }>(SOURCE_REPO_API)
+      .pipe(catchError(() => of(null)))
+      .subscribe((repo) => {
+        const raw = repo?.pushed_at;
+        if (!raw) {
+          this.lastPushLabel.set(LAST_PUSH_FALLBACK);
+          return;
+        }
+        const d = new Date(raw);
+        if (Number.isNaN(d.getTime())) {
+          this.lastPushLabel.set(LAST_PUSH_FALLBACK);
+          return;
+        }
+        const hh = String(d.getHours()).padStart(2, '0');
+        const mm = String(d.getMinutes()).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        const mo = String(d.getMonth() + 1).padStart(2, '0');
+        const yyyy = d.getFullYear();
+        this.lastPushLabel.set(`${hh}:${mm} (${dd}/${mo}/${yyyy})`);
+      });
   }
 
   protected submitNewsletter(event: Event): void {

@@ -1,4 +1,4 @@
-<section class="hero" aria-labelledby="hero-title">
+<section class="hero" [class.hero--logo-in]="logoIn()" aria-labelledby="hero-title">
   <div class="hero__atmosphere" aria-hidden="true">
     <div class="hero__glow"></div>
     <div class="hero__grid"></div>
@@ -8,32 +8,9 @@
   </div>
 
   <div class="hero__layout">
-    <div class="hero__copy">
-      <h1 id="hero-title" class="hero__title">
-        <span class="hero__title-line hero__title-line--primary">TESTER DARTCHAIN</span>
-        <span class="hero__title-line">sans acheter.</span>
-      </h1>
-
-      <p class="hero__lead">
-        Hub pédagogique autour d’une chaîne démo immersive — wallet, swap LaunchLab, jumeau urbain
-        Marseille. <strong>R4V3</strong> est une unité de lecture testnet, pas une offre d’achat.
-      </p>
-
-      <div class="hero__actions">
-        <a
-          class="cta cta--lg cta--primary review-cta"
-          href="https://dartchain.pages.dev"
-          target="_blank"
-          rel="noopener noreferrer"
-          data-cta="demo-hero"
-        >
-          Ouvrir la démo
-        </a>
-        <a routerLink="/comprendre" class="hero__secondary" data-cta="comprendre-hero"
-          >Comprendre DartChain</a
-        >
-      </div>
-    </div>
+    <h1 id="hero-title" class="hero__title">
+      <span class="hero__title-line hero__title-line--primary">TESTER DARTCHAIN</span>
+    </h1>
 
     <div class="hero__visual" aria-hidden="false">
       <app-logo-stl-viewer
@@ -44,13 +21,36 @@
         logoRelayId="home-hero"
       />
     </div>
-  </div>
-</section>
 
-<section class="proof-bar" id="preuves" aria-label="Preuves vérifiables" appReveal>
-  <div class="section__inner proof-bar__inner">
-    <ul class="proof-bar__list">
-      <li>
+    <p class="hero__subtitle">Sans Acheter du R4V3</p>
+
+    <div class="hero__lead">
+      <p>Hub Pedagogique autour d’une Blockchain Immersive</p>
+      <p>Wallet, Swap, LaunchLab, Noeud Ludique, CHAT</p>
+      <p class="hero__lead-eq">1R4V3 = 1CHF</p>
+      <p class="hero__lead-warn">R4V3 n’est pas un conseil stable en investissement</p>
+      <p class="hero__dyor">
+        <span class="hero__dyor-text" data-text="Do Your Own Research">Do Your Own Research</span>
+      </p>
+    </div>
+
+    <div class="hero__actions">
+      <a
+        class="cta cta--lg cta--primary review-cta"
+        href="https://dartchain.pages.dev"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-cta="demo-hero"
+      >
+        Ouvrir la Demo
+      </a>
+      <a routerLink="/comprendre" class="hero__secondary" data-cta="comprendre-hero"
+        >Comprendre Dartchain</a
+      >
+    </div>
+
+    <div class="hero__meta">
+      <div class="hero__meta-row">
         <button
           type="button"
           class="health-pill"
@@ -63,25 +63,39 @@
           <span class="dot" [class.dot--live]="healthStatus() === 'up'"></span>
           {{ healthLabel() }}
         </button>
-      </li>
-      <li>chain-id 3377</li>
-      <li>
+        <span class="hero__meta-chain">chain-id 3377</span>
+      </div>
+      <p class="hero__meta-source">
         <a href="https://github.com/Rutkarf/dartchain" target="_blank" rel="noopener noreferrer"
-          >Code source</a
+          >Code Source</a
         >
-      </li>
-      @if (healthCheckedAt(); as checked) {
-        <li class="proof-bar__checked">Vérifié {{ checked | date: 'HH:mm' }}</li>
-      }
-    </ul>
-    <p class="proof-bar__warn" role="note">
-      R4V3 est un jeton de démonstration. Aucune valeur monétaire garantie. Contenu éducatif — pas un
-      conseil financier.
-    </p>
+        :
+        @if (lastPushLabel(); as push) {
+          <span>{{ push }}</span>
+        } @else {
+          <span>—</span>
+        }
+      </p>
+      <p class="hero__meta-version">Version {{ appVersion }}</p>
+    </div>
+
+    <aside class="hero__disclaimer" id="preuves" aria-label="Disclaimer">
+      <p class="hero__disclaimer-label">DISCLAIMER</p>
+      <p class="hero__disclaimer-text" role="note">
+        R4V3 est un jeton avec un PEG de
+        <span class="hero__disclaimer-peg">
+          <span class="hero__disclaimer-peg-token">1R4V3</span>
+          <span class="hero__disclaimer-peg-eq" aria-hidden="true">=</span>
+          <span class="hero__disclaimer-peg-fiat">1CHF</span>
+        </span>
+      </p>
+      <p class="hero__disclaimer-line">Aucune Valeur Montaire Garantie ! Contenue Educatif</p>
+      <p class="hero__disclaimer-shout">PAS UN CONSEIL FINANCIER</p>
+    </aside>
   </div>
 </section>
 
-<section class="section" id="produit" aria-labelledby="product-title" appReveal>
+<section class="section section--produit" id="produit" aria-labelledby="product-title" appReveal>
   <div class="section__inner">
     <p class="section__eyebrow">Produit</p>
     <h2 id="product-title" class="section__title">Une démo full-stack pour apprendre en faisant.</h2>

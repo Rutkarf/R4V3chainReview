@@ -87,6 +87,60 @@ export class LogoRelayService {
     this.introHold = on;
   }
 
+  /** Bloque les vols dès le boot intro (avant AfterViewInit des cibles). */
+  armForIntro(): void {
+    this.introHold = true;
+    this.pendingIntroLand = false;
+    this.flight.set(null);
+    this.busy.set(false);
+    this.mode.set('idle');
+    this.descentFrom = null;
+  }
+
+  /**
+   * Après Feed The R4V3 : relâche le hold et rejoue header → hero → descente.
+   */
+  releaseAfterIntro(): void {
+    this.pendingIntroLand = false;
+    this.mode.set('idle');
+    this.flight.set(null);
+    this.busy.set(false);
+    this.introHold = true;
+
+    const hero = this.targets.get('home-hero');
+    if (hero) {
+      const landed = new Set(this.landedIds());
+      landed.delete('home-hero');
+      this.landedIds.set(landed);
+      hero.classList.remove('logo-relay-target--landed', 'logo-relay-target--pulse');
+      if (this.reduced) {
+        this.introHold = false;
+        this.markLanded('home-hero', hero);
+      } else {
+        hero.classList.add('logo-relay-target--waiting');
+      }
+    }
+
+    this.queue = this.queue.filter((id) => id !== 'home-hero');
+    window.setTimeout(() => {
+      this.introHold = false;
+      if (this.reduced) {
+        if (this.targets.has('site-footer')) {
+          this.mode.set('descent');
+          this.descentToken.update((n) => n + 1);
+        } else {
+          this.drainQueue();
+        }
+        return;
+      }
+      if (this.targets.has('home-hero') && !this.landedIds().has('home-hero')) {
+        this.requestFlight('home-hero');
+      } else {
+        this.drainQueue();
+      }
+    }, 320);
+  }
+
   /**
    * Après l’intro AMIX : le hero est déjà révélé, on passe à la descente scroll
    * sans rejouer le vol header → hero.
@@ -148,7 +202,18 @@ export class LogoRelayService {
     this.startFlight(id);
   }
 
-  completeFlight(id: string): void {
+  completeFlight(id: string): boolean {
+    if (this.introHold) {
+      this.flight.set(null);
+      this.busy.set(false);
+      this.mode.set('idle');
+      const held = this.targets.get(id);
+      if (held && !this.landedIds().has(id)) {
+        held.classList.remove('logo-relay-target--landed', 'logo-relay-target--pulse');
+        held.classList.add('logo-relay-target--waiting');
+      }
+      return false;
+    }
     const el = this.targets.get(id);
     if (el) this.markLanded(id, el);
     this.flight.set(null);
@@ -157,11 +222,12 @@ export class LogoRelayService {
     if (id === 'home-hero' && !this.reduced && this.targets.has('site-footer')) {
       this.mode.set('descent');
       this.descentToken.update((n) => n + 1);
-      return;
+      return true;
     }
 
     this.mode.set('idle');
     this.drainQueue();
+    return true;
   }
 
   /** Fin de descente sans vol (reduced / abort). */
