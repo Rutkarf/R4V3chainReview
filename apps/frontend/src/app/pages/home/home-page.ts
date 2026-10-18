@@ -138,7 +138,7 @@ export class HomePage implements OnInit, OnDestroy {
       return;
     }
     try {
-      const key = 'dartchain.review.newsletter';
+      const key = 'R4V3chainReview.newsletter';
       const prev = JSON.parse(localStorage.getItem(key) ?? '[]') as string[];
       if (!prev.includes(email)) {
         localStorage.setItem(key, JSON.stringify([...prev, email]));

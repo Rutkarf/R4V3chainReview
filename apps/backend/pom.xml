@@ -11,11 +11,11 @@
 		<relativePath/>
 	</parent>
 
-	<groupId>io.dartchain.review</groupId>
-	<artifactId>dartchain-review-backend</artifactId>
+	<groupId>io.r4v3chain.review</groupId>
+	<artifactId>r4v3chain-review-backend</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
-	<name>dartchain-review-backend</name>
-	<description>Backend API for dartchain.review (docs, FAQ, community)</description>
+	<name>r4v3chain-review-backend</name>
+	<description>Backend API for R4V3chainReview (docs, FAQ, community)</description>
 
 	<properties>
 		<java.version>21</java.version>

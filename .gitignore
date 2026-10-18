@@ -1,4 +1,4 @@
-# dartchain.review monorepo
+# R4V3chainReview monorepo
 .DS_Store
 *.log
 .env
@@ -18,3 +18,7 @@ apps/backend/target/
 apps/frontend/node_modules/
 apps/frontend/dist/
 apps/frontend/.angular/
+
+# Local H2 (dev)
+apps/backend/data/*.mv.db
+apps/backend/data/*.trace.db

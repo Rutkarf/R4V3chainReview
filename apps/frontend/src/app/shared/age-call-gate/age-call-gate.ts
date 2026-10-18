@@ -1155,8 +1155,8 @@ export class AgeCallGate implements OnInit, AfterViewInit, OnDestroy {
 
   private isAudioUnlocked(): boolean {
     const shared = (
-      window as unknown as { __DARTCHAIN_AUDIO__?: { unlocked?: boolean } }
-    ).__DARTCHAIN_AUDIO__;
+      window as unknown as { __R4V3CHAIN_AUDIO__?: { unlocked?: boolean } }
+    ).__R4V3CHAIN_AUDIO__;
     return Boolean(shared?.unlocked);
   }
 
@@ -1164,8 +1164,8 @@ export class AgeCallGate implements OnInit, AfterViewInit, OnDestroy {
     if (this.ringUnlockBound) return;
     this.ringUnlockBound = () => {
       const shared = (
-        window as unknown as { __DARTCHAIN_AUDIO__?: { unlock?: () => void } }
-      ).__DARTCHAIN_AUDIO__;
+        window as unknown as { __R4V3CHAIN_AUDIO__?: { unlock?: () => void } }
+      ).__R4V3CHAIN_AUDIO__;
       shared?.unlock?.();
       if (this.ringWanted && this.ringing()) void this.unmuteRing();
     };

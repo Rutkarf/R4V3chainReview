@@ -1,6 +1,6 @@
-# Charte graphique DartChain → dartchain.review
+# Charte graphique R4V3chain → R4V3chainReview
 
-Document d’extraction depuis le codebase DartChain (`apps/dartchain-frontend/Dart`).  
+Document d’extraction depuis le codebase R4V3chain (`apps/r4v3chain-frontend/Dart`).  
 **Source de vérité tokens :** `design/tokens/` (copie locale).
 
 ## Positionnement visuel
@@ -8,7 +8,7 @@ Document d’extraction depuis le codebase DartChain (`apps/dartchain-frontend/D
 - **Univers :** dark navy fintech / Web3 premium (Pass 1 design system)
 - **Ton :** cyberpunk **sobre** — accents cyan maîtrisés, pas « casino crypto »
 - **Surfaces :** glassmorphisme fintech subtil (`.ds-surface`), grain/sheen quasi invisibles
-- **Viewport produit DartChain :** 250 × 550 px (shell mobile) — **dartchain.review** utilisera un layout web large, avec les **mêmes tokens couleur / typo / CTA**
+- **Viewport produit R4V3chain :** 250 × 550 px (shell mobile) — **R4V3chainReview** utilisera un layout web large, avec les **mêmes tokens couleur / typo / CTA**
 
 ## Palette marque (theme.brand.css)
 
@@ -39,7 +39,7 @@ Document d’extraction depuis le codebase DartChain (`apps/dartchain-frontend/D
 | `--warning` | `#e6b84d` | Avertissement / risques |
 | `--danger` | `#e85d75` | Erreur / alerte scam |
 
-> Note : `theme.css` (marque Baltic Blue) est **remappé** par Pass 1 vers cyan teal `#2ec4d6` via `--accent-primary`. Pour dartchain.review, **privilégier les tokens `--ds-*` / `--accent-cyan`**.
+> Note : `theme.css` (marque Baltic Blue) est **remappé** par Pass 1 vers cyan teal `#2ec4d6` via `--accent-primary`. Pour R4V3chainReview, **privilégier les tokens `--ds-*` / `--accent-cyan`**.
 
 ## Typographie
 
@@ -77,7 +77,7 @@ Fichier : `design/tokens/cta-buttons.css`
 Classe `.ds-surface` (+ `--standard` / `--elevated` / `--active` / `--card` / `--strip`)  
 Fichier : `design/tokens/ds-surface.css`
 
-## Règles pour dartchain.review
+## Règles pour R4V3chainReview
 
 1. Réutiliser les tokens `--ds-*` ; ne pas inventer une 2ᵉ palette.
 2. Éviter glow excessif, dégradés « pump », pills casino.
@@ -88,7 +88,7 @@ Fichier : `design/tokens/ds-surface.css`
 
 ## Fichiers copiés
 
-| Fichier local | Origine DartChain |
+| Fichier local | Origine R4V3chain |
 |---------------|-------------------|
 | `design/tokens/design-system-tokens.css` | `src/styles/design-system-tokens.css` |
 | `design/tokens/theme.brand.css` | `src/theme.css` |

@@ -12,7 +12,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { LogoStlCacheService } from './logo-stl-cache.service';
 
-const ACCENT = 0x235789; /* Baltic Blue — charte DartChain */
+const ACCENT = 0x235789; /* Baltic Blue — charte R4V3chain */
 
 export type LogoViewerVariant = 'mark' | 'footer' | 'hero';
 
@@ -30,7 +30,7 @@ export type LogoViewerVariant = 'mark' | 'footer' | 'hero';
 export class LogoStlViewer implements AfterViewInit, OnDestroy {
   /** mark = pastille header/pages ; footer = marque bas de page ; hero = ancre visuelle landing */
   @Input() variant: LogoViewerVariant = 'mark';
-  @Input() ariaLabel = 'Logo DartChain 3D — glisser pour tourner';
+  @Input() ariaLabel = 'Logo R4V3chain 3D — glisser pour tourner';
 
   @ViewChild('host', { static: true })
   private readonly hostRef!: ElementRef<HTMLDivElement>;

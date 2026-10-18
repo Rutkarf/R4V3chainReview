@@ -6,7 +6,7 @@ const LOGO_URL = '/logo.stl';
 declare global {
   interface Window {
     /** Prefetch HTML (index.html) — ArrayBuffer logo.stl, sans Three.js. */
-    __DARTCHAIN_LOGO_STL__?: Promise<ArrayBuffer | null>;
+    __R4V3CHAIN_LOGO_STL__?: Promise<ArrayBuffer | null>;
   }
 }
 
@@ -58,7 +58,7 @@ export class LogoStlCacheService {
   private ensureBytes(): Promise<ArrayBuffer | null> {
     if (!this.bytesPromise) {
       const early =
-        typeof window !== 'undefined' ? window.__DARTCHAIN_LOGO_STL__ : undefined;
+        typeof window !== 'undefined' ? window.__R4V3CHAIN_LOGO_STL__ : undefined;
       this.bytesPromise = (early ?? this.fetchBytes()).then((buf) => buf);
     }
     return this.bytesPromise;

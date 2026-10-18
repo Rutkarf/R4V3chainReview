@@ -4,13 +4,13 @@ export interface FaqItem {
   answer: string;
 }
 
-/** FAQ landing — faits alignés README / codebase DartChain. */
+/** FAQ landing — faits alignés README / codebase R4V3chain. */
 export const LANDING_FAQ: readonly FaqItem[] = [
   {
     id: 'real-crypto',
-    question: 'DartChain est-elle une crypto réelle à acheter ?',
+    question: 'R4V3chain est-elle une crypto réelle à acheter ?',
     answer:
-      'Non. Selon le dépôt officiel, DartChain est une démo full-stack : pas de mainnet, pas de custodian, pas d’achat. Les jetons sont de démonstration uniquement.',
+      'Non. Selon le dépôt officiel, R4V3chain est une démo full-stack : pas de mainnet, pas de custodian, pas d’achat. Les jetons sont de démonstration uniquement.',
   },
   {
     id: 'buy-r4v3',
@@ -40,25 +40,25 @@ export const LANDING_FAQ: readonly FaqItem[] = [
     id: 'free',
     question: 'La démo est-elle gratuite ?',
     answer:
-      'Oui : l’expérience live sur dartchain.pages.dev est une démonstration. Aucun dépôt d’argent n’est requis pour explorer wallet, faucet, swap pédagogique ou le jumeau 3D de Marseille.',
+      'Oui : l’expérience live R4V3chain est une démonstration. Aucun dépôt d’argent n’est requis pour explorer wallet, faucet, swap pédagogique ou le jumeau 3D de Marseille.',
   },
   {
     id: 'mainnet',
     question: 'Y a-t-il un mainnet aujourd’hui ?',
     answer:
-      'Non. Le README du projet place explicitement mainnet, custody et token réel hors scope. La chaîne démo utilise le chain-id 3377 (DartChain Native).',
+      'Non. Le README du projet place explicitement mainnet, custody et token réel hors scope. La chaîne démo utilise le chain-id 3377 (R4V3chain Native).',
   },
   {
     id: 'source',
     question: 'Où est le code source ?',
     answer:
-      'Le monorepo est public sur GitHub (Rutkarf/dartchain) : frontend Angular + Three.js, backend Spring Boot, Docker et CI.',
+      'Le monorepo R4V3chain est public sur GitHub : frontend Angular + Three.js, backend Spring Boot, Docker et CI.',
   },
   {
     id: 'scam',
-    question: 'Comment repérer une arnaque liée à DartChain / R4V3 ?',
+    question: 'Comment repérer une arnaque liée à R4V3chain / R4V3 ?',
     answer:
-      'Ne partagez jamais de seed phrase. Vérifiez les URLs officielles listées sur dartchain.review (démo pages.dev, GitHub). Méfiez-vous des DMs proposant d’acheter R4V3 ou de « reclaim » des fonds.',
+      'Ne partagez jamais de seed phrase. Vérifiez les URLs officielles listées sur R4V3chainReview (démo pages.dev, GitHub). Méfiez-vous des DMs proposant d’acheter R4V3 ou de « reclaim » des fonds.',
   },
   {
     id: 'dao',

@@ -7,7 +7,7 @@ export interface TourEntryPose {
 }
 
 /**
- * Review n’embarque pas le tutoriel hub DartChain.
+ * Review n’embarque pas le tutoriel hub R4V3chain.
  * `shouldStart()` reste faux : Feed The R4V3 enchaîne le vol vers le header.
  */
 @Injectable({ providedIn: 'root' })

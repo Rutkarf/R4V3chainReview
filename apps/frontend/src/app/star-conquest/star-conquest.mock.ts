@@ -113,7 +113,7 @@ export const STAR_CONQUEST_REMOVED_QUESTS: readonly {
 
 /**
  * 35 Quests (7 × 5 familles) — board produit type GitHub Project.
- * Source de vérité : codebase + rendu https://dartchain.pages.dev (2026-08-21).
+ * Source de vérité : codebase + rendu démo R4V3chain (2026-08-21).
  * Colonnes : completed=Done · active=In Progress · available=Ready · locked=Blocked · future=Icebox.
  * Live CTA (Dock/Showcase) restent Ready jusqu’à action joueur.
  * Gains élevés → haut de zone interactive (layout runtime).
@@ -126,7 +126,7 @@ const SEEDS: readonly QuestSeed[] = [
     category: 'responsive',
     family: 'interface',
     description:
-      '[Done] Shell MVP zero-scroll : TARGET_VIEWPORT 250×550, vp-compact, tokens --ds-zone-* live sur dartchain.pages.dev.',
+      '[Done] Shell MVP zero-scroll : TARGET_VIEWPORT 250×550, vp-compact, tokens --ds-zone-* live sur la démo R4V3chain.',
     rewardM4T3R: 220,
     rarity: 'legendary',
     status: 'completed',

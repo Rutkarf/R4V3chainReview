@@ -19,7 +19,7 @@ export class RessourcesPage {
     {
       label: 'Démo live',
       href: 'https://dartchain.pages.dev',
-      note: 'Application DartChain (Cloudflare Pages)',
+      note: 'Application R4V3chain (Cloudflare Pages)',
     },
     {
       label: 'Dépôt GitHub',
@@ -34,7 +34,7 @@ export class RessourcesPage {
     {
       label: 'Image Docker backend',
       href: 'https://hub.docker.com/r/rutkarf/dartchain-backend',
-      note: 'rutkarf/dartchain-backend:1.0.0',
+      note: 'Image Docker actuelle (cutover → r4v3chain-backend)',
     },
   ];
 }

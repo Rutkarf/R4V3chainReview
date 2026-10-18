@@ -20,5 +20,5 @@ import { LogoRelayAnchorDirective } from '../logo-relay/logo-relay-anchor.direct
 })
 export class DocEyebrow {
   @Input({ required: true }) label!: string;
-  @Input() logoLabel = 'Logo DartChain';
+  @Input() logoLabel = 'Logo R4V3chain';
 }

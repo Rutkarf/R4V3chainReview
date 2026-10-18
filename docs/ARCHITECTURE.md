@@ -1,8 +1,8 @@
-# Architecture cible — dartchain.review
+# Architecture cible — R4V3chainReview
 
 ## Frontend (`apps/frontend`)
 
-Angular 21 SPA avec **router** (contrairement à DartChain shell mono-page).
+Angular 21 SPA avec **router** (contrairement à R4V3chain shell mono-page).
 
 ```
 src/app/
@@ -26,7 +26,7 @@ Styles : `src/styles/` ← tokens branchés depuis `design/tokens/`.
 Spring Boot 3.5 / Java 21 — packages prévus :
 
 ```
-io.dartchain.review
+io.r4v3chain.review
 ├── config/         # sécurité, CORS, properties
 ├── health/         # /api/health
 ├── content/        # pages FAQ / docs (Phase 1+)
@@ -35,7 +35,7 @@ io.dartchain.review
 └── common/         # erreurs, DTOs partagés
 ```
 
-API préfixe prévu : `/api` et `/api/v1` (aligné DartChain).
+API préfixe prévu : `/api` et `/api/v1` (aligné R4V3chain).
 
 ## Phases
 
